@@ -11,9 +11,12 @@
 #include "Node.h"
 
 class Road {
-    std::pair<std::shared_ptr<Node>> terminals;
 public:
-    Road(std::shared_ptr<Node> t1, std::shared_ptr<Node> t2): terminals(make_pair(t1, t2)){};
+    std::pair<std::shared_ptr<Node>> terminals;
+    double distance;
+
+public:
+    Road(std::shared_ptr<Node> t1, std::shared_ptr<Node> t2) : terminals(make_pair(t1, t2)) { };
 };
 
 

@@ -10,8 +10,11 @@
 class Road;
 
 class Node {
+public:
+    std::size_t id;
     double x, y;
     std::vector<Road> roads;
+
 public:
     Node(double x, double y): x(x), y(y){}
 };
