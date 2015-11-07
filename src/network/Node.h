@@ -1,23 +1,26 @@
 //
-// Created by chiewen on 2015/11/6.
+// Created by chiewen on 2015/11/7.
 //
 
 #ifndef ROADINS_NODE_H
 #define ROADINS_NODE_H
 
 #include <vector>
+#include <memory>
 
 class Road;
 
 class Node {
 public:
-    std::size_t id;
+    long id;
+    bool isSite = false;
     double x, y;
-    std::vector<Road> roads;
+
+    std::vector<std::shared_ptr<Road>> roads;
 
 public:
-    Node(double x, double y): x(x), y(y){}
-};
+    Node(long id, double x, double y);
 
+};
 
 #endif //ROADINS_NODE_H

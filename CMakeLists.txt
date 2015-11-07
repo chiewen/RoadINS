@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories(D:/work/lib/googletest-master/googletest/include)
 
-set(SOURCE_FILES src/main.cpp src/network/Node.h src/network/Road.h)
+set(SOURCE_FILES src/main.cpp src/network/Node.h src/network/Road.h src/io/DataReader.cpp src/io/DataReader.h src/network/Node.cpp src/network/Node.cpp src/network/Node.h src/network/Road.cpp)
 
 aux_source_directory(test DIR_TEST)
 
