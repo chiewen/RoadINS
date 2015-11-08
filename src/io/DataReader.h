@@ -10,13 +10,10 @@
 
 #include "../network/Node.h"
 #include "../network/Road.h"
-#include "../util/ctpl_stl.h"
 
 using namespace std;
 
 class DataReader {
-private:
-    static ctpl::thread_pool pool;
 public:
     static vector<shared_ptr<Node>> read_data(const string &name);
     static void addSites(const vector<shared_ptr<Node>> &nodes, double ratio);

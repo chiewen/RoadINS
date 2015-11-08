@@ -14,8 +14,6 @@
 using namespace std;
 
 
-ctpl::thread_pool DataReader::pool;
-
 vector<shared_ptr<Node>> DataReader::read_data(const string &name) {
     vector<shared_ptr<Node>> all_nodes;
     read_nodes(name, all_nodes);
@@ -80,7 +78,6 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
 
     regex reg_road("a (\\d*) (\\d*) (\\d*)");
     auto insert_road = [&](long s, long t) {
-        cerr << "thread start " << this_thread::get_id() << endl;
         smatch m;
         for (long i = s; i < t; i++) {
             if (regex_search(vec_lines[i].cbegin(), vec_lines[i].cend(), m, reg_road)) {
@@ -92,41 +89,22 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
                                       [](const shared_ptr<Node> &a, const shared_ptr<Node> &b) {
                                           return a->id < b->id;
                                       });
-                try {
-                    if (a1 != all_nodes.end() && a2 != all_nodes.end()) {
-                        //auto road = make_shared<Road>(*a1, *a2, stod(m.str(3)));
-                        //lock_guard<mutex> {(*a1)->mutex_roads};
-                        //(*a1)->roads.push_back(road);
-                    }
-                    else { cerr << "not found!" << endl; }
-                }
-                catch (exception &e) {
-                    cerr << "inner:" << e.what();
+                if (a1 != all_nodes.end() && a2 != all_nodes.end()) {
+                    auto road = make_shared<Road>(*a1, *a2, stod(m.str(3)));
+                    lock_guard<mutex> {(*a1)->mutex_roads};
+                    (*a1)->roads.push_back(road);
                 }
             }
         }
-        cerr << "thread finished " << this_thread::get_id() << endl;
     };
 
     vector<thread> vec_threads;
-    for (long i = 0; i < thread_num - 1; i++) {
-        try {
-            thread t(insert_road, block_size * i, block_size * (i + 1));
-            cerr << "created: " << t.get_id() << endl;
-            vec_threads.push_back(move(t));
-        }
-        catch (exception &e) {
-            cerr << "creating error " << e.what() << i << " now we have " << vec_threads.size() << endl;
-        }
-    }
+    for (int i = 0; i < thread_num - 1; i++)
+        vec_threads.emplace_back(insert_road, block_size * i, block_size * (i + 1));
 
     insert_road(block_size * (thread_num - 1), vec_lines.size());
 
-    //for_each(vec_threads.begin(), vec_threads.end(), mem_fun_ref(&thread::join));
-    for (auto &t: vec_threads) {
-        t.join();
-        cerr << t.get_id() << " finished" << endl;
-    }
+    for_each(vec_threads.begin(), vec_threads.end(), mem_fun_ref(&thread::join));
 
     cout << "finish reading roads " << TimePrinter::now << endl;
 }
@@ -155,7 +133,7 @@ void DataReader::calc_dijkstra(const vector<shared_ptr<Node>> &nodes) {
     cout << "start calculating nearest neighbors " << TimePrinter::now << endl;
 
     vector<thread> vec_threads;
-    for (long i = 0; i < thread_num - 1; i++)
+    for (int i = 0; i < thread_num - 1; i++)
         vec_threads.emplace_back(calc_dijkstra_block, block_size * i, block_size * (i + 1));
 
     calc_dijkstra_block(block_size * (thread_num - 1), nodes.size());
