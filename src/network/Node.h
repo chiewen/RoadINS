@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <memory>
+#include <mutex>
+
+using namespace std;
 
 class Road;
 
@@ -15,11 +18,13 @@ public:
     long id;
     bool isSite = false;
     double x, y;
-
-    std::vector<std::shared_ptr<Road>> roads;
+    pair<weak_ptr<Node>, double> nearest_neighbor;
+    vector<shared_ptr<Road>> roads;
+    mutex mutex_roads;
 
 public:
     Node(long id, double x, double y);
+    vector<pair<weak_ptr<Node>, double>> neighbors();
 
 };
 

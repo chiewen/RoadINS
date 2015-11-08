@@ -4,5 +4,5 @@
 
 #include "Road.h"
 
-Road::Road(std::shared_ptr<Node> &t1, std::shared_ptr<Node> &t2, double distance) :
-        terminals(make_pair(t1, t2)), distance(distance) { }
+Road::Road(const std::shared_ptr<Node> &t1, const std::shared_ptr<Node> &t2, double distance) :
+        terminals(std::make_pair(std::weak_ptr<Node>(t1), std::weak_ptr<Node>(t2))), distance(distance) { }

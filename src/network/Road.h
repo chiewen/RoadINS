@@ -10,13 +10,15 @@
 
 #include "Node.h"
 
+using namespace std;
+
 class Road {
 public:
-    std::pair<std::shared_ptr<Node>, std::shared_ptr<Node>> terminals;
+    pair<weak_ptr<Node>, weak_ptr<Node>> terminals;
     double distance;
 
 public:
-    Road(std::shared_ptr<Node> &t1, std::shared_ptr<Node> &t2, double distance);
+    Road(const shared_ptr<Node> &t1, const shared_ptr<Node> &t2, double distance);
 };
 
 
