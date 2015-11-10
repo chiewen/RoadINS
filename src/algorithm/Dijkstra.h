@@ -13,7 +13,17 @@ using namespace std;
 
 class Dijkstra {
 public:
-    static void execute(const shared_ptr<Node> &ptr_node, const vector<shared_ptr<Node>> &vec_nodes);
+    static void find_nearest(const vector<shared_ptr<Node>> &vec_nodes, const shared_ptr<Node> &ptr_node);
+
+    static vector<pair<weak_ptr<Node>, double>>
+            top_k(const vector<shared_ptr<Node>> &vec_nodes, const shared_ptr<Node> &ptr_node,
+                  double dist_to_node, int k);
+
+private:
+    static vector<pair<weak_ptr<Node>, double>>
+            execute(const vector<shared_ptr<Node>> &vec_nodes,
+                    map<long, pair<double, shared_ptr<Node>>> &known_nodes,
+                    int k);
 };
 
 

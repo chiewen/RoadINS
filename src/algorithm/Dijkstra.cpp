@@ -10,11 +10,21 @@
 
 using namespace std;
 
-void Dijkstra::execute(const shared_ptr<Node> &ptr_node, const vector<shared_ptr<Node>> &vec_nodes) {
+void Dijkstra::find_nearest(const vector<shared_ptr<Node>> &vec_nodes, const shared_ptr<Node> &ptr_node) {
     map<long, pair<double, shared_ptr<Node>>> known_nodes;
-    set<long> searched;
-
     known_nodes[ptr_node->id] = make_pair(0.0, ptr_node);
+    auto nearest = execute(vec_nodes, known_nodes, 1);
+    if (nearest.size() == 1)
+        ptr_node->nearest_neighbor = nearest[0];
+    else throw runtime_error("node does not have nearest neighbor");
+}
+
+vector<pair<weak_ptr<Node>, double>>
+Dijkstra::execute(
+        const vector<shared_ptr<Node>> &vec_nodes,
+        map<long, pair<double, shared_ptr<Node>>> &known_nodes, int k) {
+    vector<pair<weak_ptr<Node>, double>> result;
+    set<long> searched;
 
     while (!known_nodes.empty()) {
         auto min = min_element(known_nodes.begin(), known_nodes.end(),
@@ -25,8 +35,8 @@ void Dijkstra::execute(const shared_ptr<Node> &ptr_node, const vector<shared_ptr
 
         auto p_min = min->second.second;
         if (p_min->isSite) {
-            ptr_node->nearest_neighbor = make_pair(p_min, min->second.first);
-            break;
+            result.emplace_back(p_min, min->second.first);
+            if (result.size() == k) break;
         }
 
         auto d_min = min->second.first;
@@ -44,4 +54,13 @@ void Dijkstra::execute(const shared_ptr<Node> &ptr_node, const vector<shared_ptr
                 m->second.first = d_min + n.second;
         }
     }
+    return result;
+}
+
+vector<pair<weak_ptr<Node>, double>>
+Dijkstra::top_k(const vector<shared_ptr<Node>> &vec_nodes,
+                const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
+    map<long, pair<double, shared_ptr<Node>>> known_nodes;
+    known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
+    return execute(vec_nodes, known_nodes, k);
 }
