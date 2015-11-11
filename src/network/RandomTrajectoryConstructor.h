@@ -10,7 +10,7 @@
 
 class RandomTrajectoryConstructor {
 public:
-    static Trajectory construct(shared_ptr<Node> source_node, int roads_count, double direct_x, double direct_y);
+    static Trajectory construct(shared_ptr<Node> source_node, int roads_count);
 
 };
 

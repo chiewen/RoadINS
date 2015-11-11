@@ -1,14 +1,11 @@
 //
 // Created by Chiewen on 2015/11/6.
 //
-#include <numeric>
 #include <iostream>
 #include <algorithm>
 
 #include "gtest/gtest.h"
-#include "../src/network/Node.h"
 #include "../src/io/DataReader.h"
-#include "../src/algorithm/Dijkstra.h"
 #include "test_fixture.h"
 
 

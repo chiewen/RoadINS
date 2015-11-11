@@ -14,7 +14,8 @@ using namespace std;
 
 class Road {
 public:
-    pair<weak_ptr<Node>, weak_ptr<Node>> terminals;
+    weak_ptr<Node> from;
+    weak_ptr<Node> to;
     double distance;
 
 public:

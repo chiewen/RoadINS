@@ -11,7 +11,6 @@ Node::Node(long id, double x, double y) : id(id), x(x), y(y) { }
 
 vector<pair<weak_ptr<Node>, double>> Node::neighbors() {
     vector<pair<weak_ptr<Node>, double>> vec_neighbors;
-    for (auto r: roads) vec_neighbors.push_back(make_pair(r->terminals.second, r->distance));
-
+    for (auto r: roads) vec_neighbors.push_back(make_pair(r->to, r->distance));
     return vec_neighbors;
 }

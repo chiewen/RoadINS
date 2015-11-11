@@ -33,13 +33,13 @@ TEST(Trajectory, Simple) {
 
 TEST_F(NodesNetTest, Construct) {
 
-    auto traj = RandomTrajectoryConstructor::construct(nodes[0], 50, 0, 0);
+    auto traj = RandomTrajectoryConstructor::construct(nodes[0], 50);
 
     ASSERT_EQ(traj.road_count(), 50);
 
     while (traj.has_next()) {
         auto c = traj.get_current_and_step_forward();
-        cout << c.first->terminals.first.lock()->id << ":" << c.first->terminals.second.lock()->id
+        cout << c.first->from.lock()->id << ":" << c.first->to.lock()->id
         << "(" << c.first->distance << ")" << "-->" << c.second << endl;
     }
 }
