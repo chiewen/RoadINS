@@ -9,8 +9,8 @@ using namespace std;
 
 Node::Node(long id, double x, double y) : id(id), x(x), y(y) { }
 
-vector<pair<weak_ptr<Node>, double>> Node::neighbors() {
-    vector<pair<weak_ptr<Node>, double>> vec_neighbors;
-    for (auto r: roads) vec_neighbors.push_back(make_pair(r->to, r->distance));
+vector<pair<shared_ptr<Node>, shared_ptr<Road>>> Node::neighbors() {
+    vector<pair<shared_ptr<Node>, shared_ptr<Road>>> vec_neighbors;
+    for (auto r: roads) vec_neighbors.emplace_back(r->to, r);
     return vec_neighbors;
 }

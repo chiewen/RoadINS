@@ -24,7 +24,7 @@ public:
 
 public:
     Node(long id, double x, double y);
-    vector<pair<weak_ptr<Node>, double>> neighbors();
+    vector<pair<shared_ptr<Node>, shared_ptr<Road>>> neighbors();
 
 };
 

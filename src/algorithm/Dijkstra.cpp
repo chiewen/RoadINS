@@ -5,62 +5,82 @@
 #include <set>
 #include <algorithm>
 #include <iostream>
+#include <tuple>
 
 #include "Dijkstra.h"
 
 using namespace std;
 
-void Dijkstra::find_nearest(const vector<shared_ptr<Node>> &vec_nodes, const shared_ptr<Node> &ptr_node) {
-    map<long, pair<double, shared_ptr<Node>>> known_nodes;
+void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
+    known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(0.0, ptr_node);
-    auto nearest = execute(vec_nodes, known_nodes, 1);
+    auto nearest = execute(known_nodes, 1);
     if (nearest.size() == 1)
         ptr_node->nearest_neighbor = nearest[0];
     else throw runtime_error("node does not have nearest neighbor");
 }
 
-vector<pair<weak_ptr<Node>, double>>
-Dijkstra::execute(
-        const vector<shared_ptr<Node>> &vec_nodes,
-        map<long, pair<double, shared_ptr<Node>>> &known_nodes, int k) {
-    vector<pair<weak_ptr<Node>, double>> result;
+Dijkstra::neighbor_vec Dijkstra::execute(known_map &known_nodes, int k) {
+    neighbor_vec result;
     set<long> searched;
-
     while (!known_nodes.empty()) {
+        typedef known_map::value_type map_value;
         auto min = min_element(known_nodes.begin(), known_nodes.end(),
-                               [](const pair<long, pair<double, shared_ptr<Node>>> &l,
-                                  const pair<long, pair<double, shared_ptr<Node>>> &r) {
-                                   return l.second.first < r.second.first;
-                               });
-
+                               [](const map_value &l, const map_value &r) { return l.second.first < r.second.first; });
         auto p_min = min->second.second;
         if (p_min->isSite) {
             result.emplace_back(p_min, min->second.first);
             if (result.size() == k) break;
         }
-
         auto d_min = min->second.first;
         searched.insert(p_min->id);
         known_nodes.erase(min);
-
         for (auto n: p_min->neighbors()) {
-            auto pn = n.first.lock();
+            auto pn = n.first;
             if (searched.find(pn->id) != searched.end()) continue;
-
             auto m = known_nodes.find(pn->id);
             if (m == known_nodes.end())
-                known_nodes[pn->id] = make_pair(d_min + n.second, pn);
-            else if (m->second.first > d_min + n.second)
-                m->second.first = d_min + n.second;
+                known_nodes[pn->id] = make_pair(d_min + n.second->distance, pn);
+            else if (m->second.first > d_min + n.second->distance)
+                m->second.first = d_min + n.second->distance;
         }
     }
     return result;
 }
 
-vector<pair<weak_ptr<Node>, double>>
-Dijkstra::top_k(const vector<shared_ptr<Node>> &vec_nodes,
-                const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
-    map<long, pair<double, shared_ptr<Node>>> known_nodes;
+Dijkstra::neighbor_vec Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
+    known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
-    return execute(vec_nodes, known_nodes, k);
+    return execute(known_nodes, k);
+}
+
+vector<shared_ptr<Road>> Dijkstra::shortest_path(const shared_ptr<Node> &ptr_from, const shared_ptr<Node> &ptr_to) {
+    vector<shared_ptr<Road>> result;
+    map<long, tuple<double, shared_ptr<Node>, shared_ptr<Road>>> known_nodes;
+    known_nodes[ptr_from->id] = make_pair(0, ptr_from);
+    set<long> searched;
+    while (!known_nodes.empty()) {
+        typedef remove_reference<decltype(known_nodes)>::type::value_type map_value;
+        auto min = min_element(known_nodes.begin(), known_nodes.end(),
+                               [](const map_value &l, const map_value &r) { return get<0>(l.second) < get<0>(r.second); });
+        auto p_min = get<1>(min->second);
+
+        if (p_min->id == ptr_to->id) break;
+
+        auto d_min = get<0>(min->second);
+        searched.insert(p_min->id);
+        known_nodes.erase(min);
+        for (auto n: p_min->neighbors()) {
+            auto pn = n.first.lock();
+            if (searched.find(pn->id) != searched.end()) continue;
+            auto m = known_nodes.find(pn->id);
+            if (m == known_nodes.end())
+                known_nodes[pn->id] = make_tuple(d_min + n.second->distance, pn, n);
+            else if (get<0>(m->second) > d_min + n.second->distance) {
+                get<0>(m->second) = d_min + n.second->distance;
+                get<2>(m->second) = n;
+            }
+        }
+    }
+    return result;
 }

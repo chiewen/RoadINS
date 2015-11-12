@@ -33,6 +33,7 @@
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/objc" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/ssp" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
+          <root url="file://$MODULE_DIR$/../../lib/boost_1_59_0" />
           <root url="file://$MODULE_DIR$/../../lib/googletest-master/googletest/include" />
         </CLASSES>
         <SOURCES>
@@ -41,6 +42,7 @@
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/objc" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/ssp" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
+          <root url="file://$MODULE_DIR$/../../lib/boost_1_59_0" />
           <root url="file://$MODULE_DIR$/../../lib/googletest-master/googletest/include" />
         </SOURCES>
       </library>

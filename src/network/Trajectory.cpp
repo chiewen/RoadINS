@@ -43,6 +43,6 @@ double Trajectory::total_distance() {
     });
 }
 
-long Trajectory::road_count() {
+Trajectory::roads_type::difference_type Trajectory::road_count() {
     return roads.size();
 }
