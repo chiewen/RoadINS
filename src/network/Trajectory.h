@@ -6,6 +6,7 @@
 #define ROADINS_TRAJECTORY_H
 
 #include <memory>
+#include <vector>
 
 #include "Road.h"
 

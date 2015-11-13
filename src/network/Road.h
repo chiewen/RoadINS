@@ -8,7 +8,7 @@
 #include <memory>
 #include <utility>
 
-#include "Node.h"
+class Node;
 
 using namespace std;
 

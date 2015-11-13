@@ -8,11 +8,11 @@
 #include "../src/io/DataReader.h"
 #include "test_fixture.h"
 
-
-TEST_F(NodesNetTest, Node) {
-    DataReader::addSites(nodes, 0.1);
-    DataReader::calc_dijkstra(nodes);
-    ASSERT_EQ(1, 1);
-}
+//
+//TEST_F(NodesNetTest, Node) {
+//    DataReader::addSites(nodes, 0.1);
+//    DataReader::calc_dijkstra(nodes);
+//    ASSERT_EQ(1, 1);
+//}
 
 

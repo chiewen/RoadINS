@@ -9,9 +9,9 @@
 #include <memory>
 #include <mutex>
 
-using namespace std;
+#include "Road.h"
 
-class Road;
+using namespace std;
 
 class Node {
 public:

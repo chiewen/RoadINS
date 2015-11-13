@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "RandomTrajectoryConstructor.h"
 
+#include "Node.h"
+
 using namespace std;
 
 Trajectory RandomTrajectoryConstructor::construct(
