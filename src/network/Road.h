@@ -12,13 +12,11 @@ class Node;
 
 using namespace std;
 
-class Road {
-public:
+struct Road {
     weak_ptr<Node> from;
     weak_ptr<Node> to;
     double distance;
 
-public:
     Road(const shared_ptr<Node> &t1, const shared_ptr<Node> &t2, double distance);
 };
 

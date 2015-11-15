@@ -18,7 +18,7 @@ public:
 
     Trajectory(const vector<shared_ptr<Road>> &roads, double step = 50);
 
-    pair<shared_ptr<Road>, double> get_current_and_step_forward();
+    pair<shared_ptr<Road>, double> get_then_forward();
 
     roads_type::difference_type road_count();
 
@@ -34,7 +34,7 @@ private:
     double step;
     roads_type roads;
     roads_type::iterator current_road;
-    double dist_from;
+    double dist_to;
 };
 
 

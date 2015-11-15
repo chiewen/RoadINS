@@ -6,6 +6,7 @@
 #define ROADINS_DIJKSTRA_H
 
 #include <memory>
+#include <map>
 #include <vector>
 #include "../network/Node.h"
 

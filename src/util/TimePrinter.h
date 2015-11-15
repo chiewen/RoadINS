@@ -11,8 +11,7 @@
 
 using namespace std;
 
-class TimePrinter {
-public:
+struct TimePrinter {
     static TimePrinter now;
 };
 

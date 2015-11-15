@@ -92,7 +92,7 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
     for (int i = 0; i < thread_num - 1; i++)
         vec_threads.emplace_back(insert_road, block_size * i, block_size * (i + 1));
     insert_road(block_size * (thread_num - 1), vec_lines.size());
-    for_each(vec_threads.begin(), vec_threads.end(), mem_fun_ref(&thread::join));
+    for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
     cout << "finish reading roads " << TimePrinter::now << endl;
 }
 
@@ -121,7 +121,7 @@ void DataReader::calc_dijkstra(const vector<shared_ptr<Node>> &nodes) {
     for (int i = 0; i < thread_num - 1; i++)
         vec_threads.emplace_back(calc_dijkstra_block, block_size * i, block_size * (i + 1));
     calc_dijkstra_block(block_size * (thread_num - 1), nodes.size());
-    for_each(vec_threads.begin(), vec_threads.end(), mem_fun_ref(&thread::join));
+    for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
 
     cout << "finish calculating nearest neighbors " << TimePrinter::now << endl;
 }

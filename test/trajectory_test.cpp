@@ -4,9 +4,7 @@
 
 #include <gtest/gtest.h>
 #include "../src/network/Node.h"
-#include "../src/network/Road.h"
 #include "../src/network/Trajectory.h"
-#include "../src/network/RandomTrajectoryConstructor.h"
 #include "test_fixture.h"
 #include "../src/algorithm/Dijkstra.h"
 
@@ -23,40 +21,35 @@ TEST(Trajectory, Simple) {
 
     ASSERT_EQ(t1.total_distance(), 220);
 
-    for (int i = 0; i < 4; i++) t1.get_current_and_step_forward();
+    for (int i = 0; i < 4; i++) t1.get_then_forward();
 
-    ASSERT_EQ(t1.get_current_and_step_forward().second, 100);
+    ASSERT_EQ(t1.get_then_forward().second, 120);
 
-    for (int i = 0; i < 4; i++) t1.get_current_and_step_forward();
+    for (int i = 0; i < 4; i++) t1.get_then_forward();
 
     ASSERT_EQ(t1.has_next(), false);
 }
 
 //TEST_F(NodesNetTest, Construct) {
 //
-//    auto traj = RandomTrajectoryConstructor::construct(nodes[0], 50);
+//    auto traj = TrajectoryConstructor::construct_random(nodes[0], 50);
 //
 //    ASSERT_EQ(traj.road_count(), 50);
 //
 //    while (traj.has_next()) {
-//        auto c = traj.get_current_and_step_forward();
+//        auto c = traj.get_then_forward();
 //        cout << c.first->from.lock()->id << ":" << c.first->to.lock()->id
 //        << "(" << c.first->distance << ")" << "-->" << c.second << endl;
 //    }
 //}
 
 TEST_F(NodesNetTest, Construct) {
-//    auto topk = Dijkstra::top_k(nodes[1], 0, 50);
-//    cout << nodes[1]->id << ":" << nodes[1]->neighbors().size() << ":" << topk.size() << endl;
-//    int i = 0;
-//    for (auto &n : topk) {
-//        cout << "top" << ++i << n.first->id << endl;
-//    }
 
-    auto path = Dijkstra::shortest_path(nodes[1], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n){
-        return n->id == 3660;
+    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n){
+        return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]
     }));
     for (auto r: path) {
         cout << r->from.lock()->id << "\tto\t" << r->to.lock()->id << endl;
     }
+    cout << "total:\t" << path.size() << endl;
 }

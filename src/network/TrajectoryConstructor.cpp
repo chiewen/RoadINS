@@ -3,13 +3,14 @@
 //
 #include <set>
 #include <algorithm>
-#include "RandomTrajectoryConstructor.h"
+#include "TrajectoryConstructor.h"
 
 #include "Node.h"
+#include "../algorithm/Dijkstra.h"
 
 using namespace std;
 
-Trajectory RandomTrajectoryConstructor::construct(
+Trajectory TrajectoryConstructor::construct_random(
         shared_ptr<Node> source_node, int roads_count) {
     vector<shared_ptr<Road>> roads;
     set<long> already_have;
@@ -30,4 +31,9 @@ Trajectory RandomTrajectoryConstructor::construct(
         }
     }
     return Trajectory(roads);
+}
+
+Trajectory TrajectoryConstructor::construct_shortest_path(shared_ptr<Node> source_node,
+                                                          shared_ptr<Node> destination_node) {
+    return Trajectory(Dijkstra::shortest_path(source_node, destination_node));
 }

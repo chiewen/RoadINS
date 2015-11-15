@@ -13,8 +13,7 @@
 
 using namespace std;
 
-class Node {
-public:
+struct Node {
     long id;
     bool isSite = false;
     double x, y;
@@ -22,10 +21,8 @@ public:
     vector<shared_ptr<Road>> roads;
     mutex mutex_roads;
 
-public:
     Node(long id, double x, double y);
     vector<pair<shared_ptr<Node>, shared_ptr<Road>>> neighbors();
-
 };
 
 #endif //ROADINS_NODE_H
