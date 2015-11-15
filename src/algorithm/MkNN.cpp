@@ -3,21 +3,28 @@
 //
 
 #include <algorithm>
+#include <c++/iostream>
+#include <set>
 #include "MkNN.h"
 #include "Dijkstra.h"
 
 void MkNN::move(Trajectory trajectory, int k) {
     for (auto pos = trajectory.get_then_forward(); trajectory.has_next(); pos = trajectory.get_then_forward()) {
         auto top_k = Dijkstra::top_k(pos.first->to.lock(), pos.second, k);
-        vector<shared_ptr<Node>> ins;
-        for (auto &t: top_k)
-            for (auto &n: t.first->neighbors()) {
-                if (find_if(top_k.begin(), top_k.end(), [&](const pair<shared_ptr<Node>, double> &tk) {
-                    return t.first->id == tk.first->id;
-                }) == top_k.end()) {
-                    ins.emplace_back(n.first);
-                }
-            }
+
+        set<shared_ptr<Node>, ptr_node_less> ins{};
+        for (auto &k : top_k) {
+            auto neighbors = k->neighbors();
+            sort(neighbors.begin(), neighbors.end(), ptr_node_less());
+            set_difference(neighbors.begin(), neighbors.end(), top_k.begin(), top_k.end(), inserter(ins, ins.end()),
+                           ptr_node_less());
+        }
+
+        cout << endl << "topk:";
+        for (auto &p: top_k) cout << p->id << " ";
+        cout << endl << "ins:";
+        for (auto &p: ins) cout << p->id << " ";
+        cout << endl;
 
     }
 }

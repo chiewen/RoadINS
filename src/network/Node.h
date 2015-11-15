@@ -22,7 +22,8 @@ struct Node {
     mutex mutex_roads;
 
     Node(long id, double x, double y);
-    vector<pair<shared_ptr<Node>, shared_ptr<Road>>> neighbors();
+    vector<pair<shared_ptr<Node>, shared_ptr<Road>>> neighbors_with_road();
+    vector<shared_ptr<Node>> neighbors();
 };
 
 #endif //ROADINS_NODE_H

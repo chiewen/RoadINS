@@ -17,7 +17,7 @@ void NodesNetTest::SetUp() {
         return sum + node->roads.size();
     });
 
-    DataReader::addSites(nodes, 0.1);
+    DataReader::addSites(nodes, 0.07);
 
     cout << "roads num: " << roads << endl;
 }

@@ -8,7 +8,9 @@
 #include <memory>
 #include <map>
 #include <vector>
+#include <set>
 #include "../network/Node.h"
+#include "../util/ptr_node_comp.h"
 
 using namespace std;
 
@@ -18,7 +20,7 @@ public:
 
     static void find_nearest(const shared_ptr<Node> &ptr_node);
 
-    static neighbor_vec top_k(const shared_ptr<Node> &ptr_node,
+    static set<shared_ptr<Node>, ptr_node_less> top_k(const shared_ptr<Node> &ptr_node,
                               double dist_to_node, int k);
 
     static vector<shared_ptr<Road>>
@@ -26,9 +28,6 @@ public:
 
 private:
     typedef map<long, pair<double, shared_ptr<Node>>> known_map;
-
-    static neighbor_vec execute(known_map &known_nodes,
-                                int k);
 };
 
 

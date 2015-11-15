@@ -116,12 +116,12 @@ void DataReader::calc_dijkstra(const vector<shared_ptr<Node>> &nodes) {
         for (long i = s; i < t; i++) Dijkstra::find_nearest(nodes[i]);
     };
 
-    cout << "start calculating nearest neighbors " << TimePrinter::now << endl;
+    cout << "start calculating nearest neighbors_with_road " << TimePrinter::now << endl;
     vector<thread> vec_threads;
     for (int i = 0; i < thread_num - 1; i++)
         vec_threads.emplace_back(calc_dijkstra_block, block_size * i, block_size * (i + 1));
     calc_dijkstra_block(block_size * (thread_num - 1), nodes.size());
     for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
 
-    cout << "finish calculating nearest neighbors " << TimePrinter::now << endl;
+    cout << "finish calculating nearest neighbors_with_road " << TimePrinter::now << endl;
 }

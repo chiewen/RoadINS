@@ -9,7 +9,7 @@
 #include "../network/Trajectory.h"
 
 struct MkNN {
-    void move(Trajectory trajectory, int k);
+    static void move(Trajectory trajectory, int k);
 };
 
 

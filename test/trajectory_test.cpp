@@ -7,6 +7,7 @@
 #include "../src/network/Trajectory.h"
 #include "test_fixture.h"
 #include "../src/algorithm/Dijkstra.h"
+#include "../src/algorithm/MkNN.h"
 
 TEST(Trajectory, Simple) {
     auto n0 = make_shared<Node>(0, 0, 0);
@@ -52,4 +53,6 @@ TEST_F(NodesNetTest, Construct) {
         cout << r->from.lock()->id << "\tto\t" << r->to.lock()->id << endl;
     }
     cout << "total:\t" << path.size() << endl;
+
+    MkNN::move(path, 5);
 }
