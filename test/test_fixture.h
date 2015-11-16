@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 #include "../src/network/Node.h"
 #include "../src/io/DataReader.h"
+#include "../src/util/ptr_node_comp.h"
 
 class NodesNetTest : public ::testing::Test {
 protected:

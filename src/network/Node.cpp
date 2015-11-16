@@ -3,6 +3,8 @@
 //
 
 #include "Node.h"
+#include "Road.h"
+#include "../util/ptr_node_comp.h"
 
 using namespace std;
 

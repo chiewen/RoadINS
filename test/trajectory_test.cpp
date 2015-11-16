@@ -8,6 +8,7 @@
 #include "test_fixture.h"
 #include "../src/algorithm/Dijkstra.h"
 #include "../src/algorithm/MkNN.h"
+#include "../src/network/RoadNetwork.h"
 
 TEST(Trajectory, Simple) {
     auto n0 = make_shared<Node>(0, 0, 0);
@@ -45,6 +46,8 @@ TEST(Trajectory, Simple) {
 //}
 
 TEST_F(NodesNetTest, Construct) {
+
+    auto &nodes = RoadNetwork::get_mutable_instance();
 
     auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n){
         return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]

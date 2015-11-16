@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "Dijkstra.h"
+#include "../network/Road.h"
 #include "../util/ptr_node_comp.h"
 
 using namespace std;
@@ -39,7 +40,7 @@ void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
         }
     }
     if (nearest.size() == 1)
-        ptr_node->nearest_neighbor = nearest[0];
+        ptr_node->nearest_site = nearest[0];
     else throw runtime_error("node does not have nearest neighbor");
 }
 

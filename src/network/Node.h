@@ -8,16 +8,21 @@
 #include <vector>
 #include <memory>
 #include <mutex>
-
-#include "Road.h"
+#include <set>
+#include "../util/ptr_node_comp.h"
 
 using namespace std;
+
+class Road;
 
 struct Node {
     long id;
     bool isSite = false;
     double x, y;
-    pair<weak_ptr<Node>, double> nearest_neighbor;
+
+    pair<weak_ptr<Node>, double> nearest_site;
+    set<weak_ptr<Node>, ptr_node_less> voronoi_neighbors;
+
     vector<shared_ptr<Road>> roads;
     mutex mutex_roads;
 

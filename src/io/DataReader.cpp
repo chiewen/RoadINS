@@ -10,6 +10,8 @@
 #include "DataReader.h"
 #include "../algorithm/Dijkstra.h"
 #include "../util/TimePrinter.h"
+#include "../util/ptr_node_comp.h"
+#include "RoadNetwork.h"
 
 using namespace std;
 
@@ -96,18 +98,6 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
     cout << "finish reading roads " << TimePrinter::now << endl;
 }
 
-
-void DataReader::addSites(const vector<shared_ptr<Node>> &nodes, double ratio) {
-    double sum = 0;
-    long i = 1;
-    for (auto n: nodes) {
-        sum += ratio;
-        if (sum > i) {
-            i++;
-            n->isSite = true;
-        }
-    }
-}
 
 void DataReader::calc_dijkstra(const vector<shared_ptr<Node>> &nodes) {
     auto thread_num = thread::hardware_concurrency();
