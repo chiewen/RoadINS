@@ -8,10 +8,7 @@
 #include <future>
 
 #include "DataReader.h"
-#include "../algorithm/Dijkstra.h"
 #include "../util/TimePrinter.h"
-#include "../util/ptr_node_comp.h"
-#include "RoadNetwork.h"
 
 using namespace std;
 
@@ -96,22 +93,4 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
     insert_road(block_size * (thread_num - 1), vec_lines.size());
     for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
     cout << "finish reading roads " << TimePrinter::now << endl;
-}
-
-
-void DataReader::calc_dijkstra(const vector<shared_ptr<Node>> &nodes) {
-    auto thread_num = thread::hardware_concurrency();
-    auto block_size = nodes.size() / thread_num;
-    auto calc_dijkstra_block = [&](long s, long t) {
-        for (long i = s; i < t; i++) Dijkstra::find_nearest(nodes[i]);
-    };
-
-    cout << "start calculating nearest neighbors_with_road " << TimePrinter::now << endl;
-    vector<thread> vec_threads;
-    for (int i = 0; i < thread_num - 1; i++)
-        vec_threads.emplace_back(calc_dijkstra_block, block_size * i, block_size * (i + 1));
-    calc_dijkstra_block(block_size * (thread_num - 1), nodes.size());
-    for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
-
-    cout << "finish calculating nearest neighbors_with_road " << TimePrinter::now << endl;
 }

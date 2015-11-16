@@ -8,7 +8,7 @@
 
 TEST_F(NodesNetTest, TopK) {
     auto topk = Dijkstra::top_k(nodes[0], 0, 5000);
-    transform(topk.begin(), topk.end(), ostream_iterator<long>(cout, "\n"), [](const shared_ptr<Node> &n){
-        return n->id;
+    transform(topk.begin(), topk.end(), ostream_iterator<long>(cout, "\n"), [](const weak_ptr<Node> &n){
+        return n.lock()->id;
     });
 }

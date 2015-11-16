@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<conf>
+    <file_path>D:\\work\\Data\\New York City\\USA-road-d.NY</file_path>
+    <file_path_1>D:\\work\\Data\\Full USA\\USA-road-d.USA</file_path_1>
+    <file_path_2>D:\\work\\Data\\Central USA\\USA-road-d.CTR</file_path_2>
+    <site_ratio>0.07</site_ratio>
+</conf>

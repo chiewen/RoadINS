@@ -12,18 +12,18 @@ void MkNN::move(Trajectory trajectory, int k) {
     for (auto pos = trajectory.get_then_forward(); trajectory.has_next(); pos = trajectory.get_then_forward()) {
         auto top_k = Dijkstra::top_k(pos.first->to.lock(), pos.second, k);
 
-        set<shared_ptr<Node>, ptr_node_less> ins{};
-        for (auto &k : top_k) {
-            auto neighbors = k->neighbors();
-            sort(neighbors.begin(), neighbors.end(), ptr_node_less());
+        cout << endl << "topk:";
+        for (auto &p: top_k) cout << p.lock()->id << " ";
+
+        set<weak_ptr<Node>, weak_ptr_node_less> ins;
+        for (auto &t : top_k) {
+            auto & neighbors = t.lock()->voronoi_neighbors;
             set_difference(neighbors.begin(), neighbors.end(), top_k.begin(), top_k.end(), inserter(ins, ins.end()),
-                           ptr_node_less());
+                           weak_ptr_node_less());
         }
 
-        cout << endl << "topk:";
-        for (auto &p: top_k) cout << p->id << " ";
         cout << endl << "ins:";
-        for (auto &p: ins) cout << p->id << " ";
+        for (auto &p: ins) cout << p.lock()->id << " ";
         cout << endl;
 
     }

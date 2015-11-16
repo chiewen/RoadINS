@@ -10,8 +10,8 @@
 
 //
 //TEST_F(NodesNetTest, Node) {
-//    DataReader::addSites(nodes, 0.1);
-//    DataReader::calc_dijkstra(nodes);
+//    DataReader::add_sites(nodes, 0.1);
+//    DataReader::set_nearest(nodes);
 //    ASSERT_EQ(1, 1);
 //}
 

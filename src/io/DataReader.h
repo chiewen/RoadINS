@@ -16,7 +16,6 @@ using namespace std;
 class DataReader {
 public:
     static vector<shared_ptr<Node>> read_data(const string &name);
-    static void calc_dijkstra(const vector<shared_ptr<Node>> & nodes);
 private:
     static void read_nodes(const string &name, vector<shared_ptr<Node>> &all_nodes);
     static void read_roads(const string &name, vector<shared_ptr<Node>> &all_nodes);

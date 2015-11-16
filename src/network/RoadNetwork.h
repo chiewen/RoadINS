@@ -20,7 +20,8 @@ class RoadNetwork : public singleton<vector<shared_ptr<Node>>> {
 
 public:
     static void reset();
-    static void addSites(const vector<shared_ptr<Node>> &nodes, double ratio);
+    static void add_sites(const vector<shared_ptr<Node>> &nodes, double ratio);
+    static void set_nearest(const vector<shared_ptr<Node>> &nodes);
 };
 
 

@@ -8,14 +8,14 @@
 
 #include "Dijkstra.h"
 #include "../network/Road.h"
-#include "../util/ptr_node_comp.h"
 
 using namespace std;
 
 void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
     known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(0.0, ptr_node);
-    neighbor_vec nearest;
+
+    typedef vector<pair<shared_ptr<Node>, double>> neighbor_vec;
     set<long> searched;
     while (!known_nodes.empty()) {
         typedef known_map::value_type map_value;
@@ -23,7 +23,7 @@ void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
                                [](const map_value &l, const map_value &r) { return l.second.first < r.second.first; });
         auto p_min = min->second.second;
         if (p_min->isSite) {
-            nearest.emplace_back(p_min, min->second.first);
+            ptr_node->nearest_site = make_pair(p_min, min->second.first);
             break;
         }
         auto d_min = min->second.first;
@@ -39,16 +39,13 @@ void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
                 m->second.first = d_min + n.second->distance;
         }
     }
-    if (nearest.size() == 1)
-        ptr_node->nearest_site = nearest[0];
-    else throw runtime_error("node does not have nearest neighbor");
 }
 
 
-set<shared_ptr<Node>, ptr_node_less> Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
+set<weak_ptr<Node>, weak_ptr_node_less> Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
     known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
-    set<shared_ptr<Node>, ptr_node_less> result;
+    set<weak_ptr<Node>, weak_ptr_node_less> result;
     set<long> searched;
     while (!known_nodes.empty()) {
         typedef known_map::value_type map_value;
