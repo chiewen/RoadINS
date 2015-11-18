@@ -67,8 +67,8 @@ TEST_F(NodesNetTest, Construct) {
 //                cout << "r:" << r->to.lock()->nearest_site.first.lock()->id << endl;
 //    }
 
-    for (auto &n: nodes)
-        if (n->isSite && n->voronoi_neighbors.size() < 1)
-            cout << "ins" << n->voronoi_neighbors.size() << endl;
-    //    MkNN::move(path, 5);
+//    for (auto &n: nodes)
+//        if (n->isSite && n->voronoi_neighbors.size() < 1)
+//            cout << "ins" << n->voronoi_neighbors.size() << endl;
+        MkNN::move(path, 5);
 }

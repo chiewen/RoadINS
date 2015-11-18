@@ -40,7 +40,7 @@ void RoadNetwork::reset() {
 void RoadNetwork::add_sites(const vector<shared_ptr<Node>> &nodes, double ratio) {
     double sum = 0;
     long i = 1;
-    for (auto n: nodes) {
+    for (auto &n: nodes) {
         sum += ratio;
         if (sum > i) {
             i++;
@@ -63,10 +63,11 @@ void RoadNetwork::set_nearest(const vector<shared_ptr<Node>> &nodes) {
     calc_dijkstra_block(block_size * (thread_num - 1), nodes.size());
     for_each(threads_nearest.begin(), threads_nearest.end(), mem_fn(&thread::join));
 
-    cout << "finish calculating nearest neighbors_with_road. calculaing voronoi neighbors..." << TimePrinter::now << endl;
+    cout << "finish calculating nearest neighbors_with_road. calculaing voronoi neighbors..." << TimePrinter::now <<
+    endl;
     auto calc_voronoi = [&](long s, long t) {
         for (long i = s; i < t; i++) {
-            for (auto & r: nodes[i]->roads)
+            for (auto &r: nodes[i]->roads)
                 if (r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
                     lock_guard<mutex> {r->from.lock()->nearest_site.first.lock()->mutex_voronoi};
                     r->from.lock()->nearest_site.first.lock()->voronoi_neighbors.insert(

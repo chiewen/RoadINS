@@ -14,14 +14,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/network/Node.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/Road.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/Road.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/net_test.cpp" isTestSource="false" />
