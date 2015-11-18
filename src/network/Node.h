@@ -21,7 +21,7 @@ struct Node {
     double x, y;
 
     pair<weak_ptr<Node>, double> nearest_site;
-    set<weak_ptr<Node>, weak_ptr_node_less> voronoi_neighbors;
+    set<weak_ptr<Node>, ptr_node_less> voronoi_neighbors;
     mutex mutex_voronoi;
 
     vector<shared_ptr<Road>> roads;

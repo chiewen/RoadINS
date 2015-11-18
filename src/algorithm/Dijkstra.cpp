@@ -42,10 +42,10 @@ void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
 }
 
 
-set<weak_ptr<Node>, weak_ptr_node_less> Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
+set<weak_ptr<Node>, ptr_node_less> Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k) {
     known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
-    set<weak_ptr<Node>, weak_ptr_node_less> result;
+    set<weak_ptr<Node>, ptr_node_less> result;
     set<long> searched;
     while (!known_nodes.empty()) {
         typedef known_map::value_type map_value;

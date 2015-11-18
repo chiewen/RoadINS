@@ -49,7 +49,7 @@ TEST_F(NodesNetTest, Construct) {
 
     auto &nodes = RoadNetwork::get_mutable_instance();
 
-    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n){
+    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n) {
         return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]
     }));
     for (auto r: path) {
@@ -57,5 +57,18 @@ TEST_F(NodesNetTest, Construct) {
     }
     cout << "total:\t" << path.size() << endl;
 
-    MkNN::move(path, 5);
+//    for (auto &n : nodes) {
+//        cout << n-> id << "\t" << (n->isSite ? "y" : "n") << "\t" << n->roads.size() << "\t" << n->nearest_site.first.lock()->id
+//        << "\t" << (n->isSite ? to_string(n->voronoi_neighbors.size()) : "-") << endl;
+//    }
+//
+//    for (auto &n : nodes) {
+//        for (auto &r : n->roads) if (r->from.lock()->nearest_site.first.lock()->id == 197743)
+//                cout << "r:" << r->to.lock()->nearest_site.first.lock()->id << endl;
+//    }
+
+    for (auto &n: nodes)
+        if (n->isSite && n->voronoi_neighbors.size() < 1)
+            cout << "ins" << n->voronoi_neighbors.size() << endl;
+    //    MkNN::move(path, 5);
 }
