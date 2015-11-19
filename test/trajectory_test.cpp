@@ -52,10 +52,11 @@ TEST_F(NodesNetTest, Construct) {
     auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n) {
         return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]
     }));
-    for (auto r: path) {
-        cout << r->from.lock()->id << "\tto\t" << r->to.lock()->id << endl;
-    }
-    cout << "total:\t" << path.size() << endl;
+
+//    for (auto r: path) {
+//        cout << r->from.lock()->id << "\tto\t" << r->to.lock()->id << endl;
+//    }
+//    cout << "total:\t" << path.size() << endl;
 
 //    for (auto &n : nodes) {
 //        cout << n-> id << "\t" << (n->isSite ? "y" : "n") << "\t" << n->roads.size() << "\t" << n->nearest_site.first.lock()->id
@@ -70,5 +71,9 @@ TEST_F(NodesNetTest, Construct) {
 //    for (auto &n: nodes)
 //        if (n->isSite && n->voronoi_neighbors.size() < 1)
 //            cout << "ins" << n->voronoi_neighbors.size() << endl;
+    try {
         MkNN::move(path, 5);
+    }catch (exception &e) {
+        cout << "B" << e.what();
+    }
 }

@@ -18,11 +18,15 @@ class Dijkstra {
 public:
     static void find_nearest(const shared_ptr<Node> &ptr_node);
 
-    static set<weak_ptr<Node>, ptr_node_less> top_k(const shared_ptr<Node> &ptr_node,
-                                                    double dist_to_node, int k);
+    static void top_k(const shared_ptr<Node> &ptr_node,
+                                                    double dist_to_node, int k, set<long> &top_k,
+                                                    set<weak_ptr<Node>, ptr_node_less> &ptr_top_k);
 
     static vector<shared_ptr<Road>>
             shortest_path(const shared_ptr<Node> &ptr_from, const shared_ptr<Node> &ptr_to);
+
+    static bool verify(int k, const shared_ptr<Node> &query_object, double dist_to_next,
+                       const set<long> &top_k, const set<long> &ins);
 
 private:
     typedef map<long, pair<double, shared_ptr<Node>>> known_map;
