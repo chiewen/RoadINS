@@ -29,21 +29,21 @@ void Dijkstra::find_nearest(const shared_ptr<Node> &ptr_node) {
         auto d_min = min->second.first;
         searched.insert(p_min->id);
         known_nodes.erase(min);
-        for (auto n: p_min->neighbors_with_road()) {
-            auto pn = n.first;
+        for (auto &n: p_min->roads) {
+            auto pn = shared_ptr<Node>(n->to);
             if (searched.find(pn->id) != searched.end()) continue;
             auto m = known_nodes.find(pn->id);
             if (m == known_nodes.end())
-                known_nodes[pn->id] = make_pair(d_min + n.second->distance, pn);
-            else if (m->second.first > d_min + n.second->distance)
-                m->second.first = d_min + n.second->distance;
+                known_nodes[pn->id] = make_pair(d_min + n->distance, pn);
+            else if (m->second.first > d_min + n->distance)
+                m->second.first = d_min + n->distance;
         }
     }
 }
 
 
 void Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int k,
-                                                   set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &ptr_top_k) {
+                     set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &ptr_top_k) {
     known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
     ptr_top_k.clear();
@@ -60,14 +60,14 @@ void Dijkstra::top_k(const shared_ptr<Node> &ptr_node, double dist_to_node, int 
         auto d_min = min->second.first;
         searched.insert(p_min->id);
         known_nodes.erase(min);
-        for (auto n: p_min->neighbors_with_road()) {
-            auto &pn = n.first;
+        for (auto &n: p_min->roads) {
+            auto pn = shared_ptr<Node>(n->to);
             if (searched.find(pn->id) != searched.end()) continue;
             auto m = known_nodes.find(pn->id);
             if (m == known_nodes.end())
-                known_nodes[pn->id] = make_pair(d_min + n.second->distance, pn);
-            else if (m->second.first > d_min + n.second->distance)
-                m->second.first = d_min + n.second->distance;
+                known_nodes[pn->id] = make_pair(d_min + n->distance, pn);
+            else if (m->second.first > d_min + n->distance)
+                m->second.first = d_min + n->distance;
         }
     }
     top_k.clear();
@@ -97,15 +97,15 @@ vector<shared_ptr<Road>> Dijkstra::shortest_path(const shared_ptr<Node> &ptr_fro
             break;
         }
         else
-            for (auto n: p_min->neighbors_with_road()) {
-                auto &pn = n.first;
+            for (auto &n: p_min->roads) {
+                auto pn = shared_ptr<Node>(n->to);
                 if (searched.find(pn->id) != searched.end()) continue;
                 auto m = known_nodes.find(pn->id);
                 if (m == known_nodes.end())
-                    known_nodes.insert(make_pair(pn->id, make_tuple(d_min + n.second->distance, pn, n.second)));
-                else if (get<0>(m->second) > d_min + n.second->distance) {
-                    get<0>(m->second) = d_min + n.second->distance;
-                    get<2>(m->second) = n.second;
+                    known_nodes.insert(make_pair(pn->id, make_tuple(d_min + n->distance, pn, n)));
+                else if (get<0>(m->second) > d_min + n->distance) {
+                    get<0>(m->second) = d_min + n->distance;
+                    get<2>(m->second) = n;
                 }
             }
     }
@@ -132,7 +132,8 @@ bool Dijkstra::verify(int k, const shared_ptr<Node> &query_object, double dist_t
         known_nodes.erase(min);
         for (auto &n: p_min->roads) {
             auto pn = shared_ptr<Node>(n->to);
-            if (find(ins.begin(), ins.end(), pn->id) == ins.end()) continue;
+            auto nearest_id = pn->nearest_site.first.lock()->id;
+            if (ins.find(nearest_id) == ins.end() && top_k.find(nearest_id) == top_k.end()) continue;
             if (searched.find(pn->id) != searched.end()) continue;
             auto m = known_nodes.find(pn->id);
             if (m == known_nodes.end())

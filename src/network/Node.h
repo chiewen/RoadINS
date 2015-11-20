@@ -21,6 +21,7 @@ struct Node {
     double x, y;
 
     pair<weak_ptr<Node>, double> nearest_site;
+
     set<long> voronoi_neighbors;
     mutex mutex_voronoi;
 
@@ -28,8 +29,6 @@ struct Node {
     mutex mutex_roads;
 
     Node(long id, double x, double y);
-    vector<pair<shared_ptr<Node>, shared_ptr<Road>>> neighbors_with_road();
-    vector<shared_ptr<Node>> neighbors();
 };
 
 #endif //ROADINS_NODE_H

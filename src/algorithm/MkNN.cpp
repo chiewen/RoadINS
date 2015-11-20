@@ -4,19 +4,17 @@
 
 #include <algorithm>
 #include <set>
-#include <iostream>
 #include "MkNN.h"
 #include "Dijkstra.h"
 
 void MkNN::move(Trajectory trajectory, int k) {
     set<long> top_k, ins;
     set<weak_ptr<Node>, ptr_node_less> ptr_top_k;
-        refresh(k, top_k, ptr_top_k, ins, trajectory.get_then_forward());
+    refresh(k, top_k, ptr_top_k, ins, trajectory.get_then_forward());
 
     for (auto pos = trajectory.get_then_forward(); trajectory.has_next(); pos = trajectory.get_then_forward())
-        if (!Dijkstra::verify(k, pos.first->from.lock(), pos.second, top_k, ins))
+        if (!Dijkstra::verify(k, pos.first->to.lock(), pos.second, top_k, ins))
             refresh(k, top_k, ptr_top_k, ins, pos);
-
 }
 
 void MkNN::refresh(int k, set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &ptr_top_k, set<long> &ins,
@@ -27,11 +25,4 @@ void MkNN::refresh(int k, set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &
         auto &neighbors = t.lock()->voronoi_neighbors;
         set_difference(neighbors.begin(), neighbors.end(), top_k.begin(), top_k.end(), inserter(ins, ins.end()));
     }
-
-    cout << "top k\t";
-    for (auto l: top_k) cout << l << " ";
-    cout << endl << "ins\t" << ins.size() << "\t";
-    for (auto l: ins) cout << l << " ";
-    cout << endl;
-
 }
