@@ -10,6 +10,9 @@
 
 struct MkNN {
     static void move(Trajectory trajectory, int k);
+
+    static void refresh(int k, set<long> &top_k,  set<weak_ptr<Node>, ptr_node_less> &ptr_top_k, set<long> &ins,
+                        const pair<shared_ptr<Road>, double> &pos);
 };
 
 

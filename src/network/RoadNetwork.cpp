@@ -71,7 +71,7 @@ void RoadNetwork::set_nearest(const vector<shared_ptr<Node>> &nodes) {
                 if (r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
                     lock_guard<mutex> {r->from.lock()->nearest_site.first.lock()->mutex_voronoi};
                     r->from.lock()->nearest_site.first.lock()->voronoi_neighbors.insert(
-                            r->to.lock()->nearest_site.first);
+                            r->to.lock()->nearest_site.first.lock()->id);
                 }
         }
     };
