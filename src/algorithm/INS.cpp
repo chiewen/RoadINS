@@ -4,10 +4,10 @@
 
 #include <algorithm>
 #include <set>
-#include "MkNN.h"
+#include "INS.h"
 #include "Dijkstra.h"
 
-void MkNN::move(Trajectory trajectory, int k) {
+void INS::move(Trajectory trajectory, int k) {
     set<long> top_k, ins;
     set<weak_ptr<Node>, ptr_node_less> ptr_top_k;
     refresh(k, top_k, ptr_top_k, ins, trajectory.get_then_forward());
@@ -17,8 +17,8 @@ void MkNN::move(Trajectory trajectory, int k) {
             refresh(k, top_k, ptr_top_k, ins, pos);
 }
 
-void MkNN::refresh(int k, set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &ptr_top_k, set<long> &ins,
-                   const pair<shared_ptr<Road>, double> &pos) {
+void INS::refresh(int k, set<long> &top_k, set<weak_ptr<Node>, ptr_node_less> &ptr_top_k, set<long> &ins,
+                  const pair<shared_ptr<Road>, double> &pos) {
     Dijkstra::top_k(pos.first->to.lock(), pos.second, k, top_k, ptr_top_k);
     ins.clear();
     for (auto &t : ptr_top_k) {

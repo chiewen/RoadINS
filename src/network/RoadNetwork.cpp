@@ -11,6 +11,7 @@
 #include "boost/core/ignore_unused.hpp"
 #include "../algorithm/Dijkstra.h"
 #include "../util/TimePrinter.h"
+#include "boost/timer/timer.hpp"
 
 RoadNetwork::_init RoadNetwork::__init;
 
@@ -50,6 +51,7 @@ void RoadNetwork::add_sites(const vector<shared_ptr<Node>> &nodes, double ratio)
 }
 
 void RoadNetwork::set_nearest(const vector<shared_ptr<Node>> &nodes) {
+    boost::timer::cpu_timer timer;
     auto thread_num = thread::hardware_concurrency();
     auto block_size = nodes.size() / thread_num;
     auto calc_dijkstra_block = [&](long s, long t) {
@@ -80,5 +82,5 @@ void RoadNetwork::set_nearest(const vector<shared_ptr<Node>> &nodes) {
         threads_voronoi.emplace_back(calc_voronoi, block_size * i, block_size * (i + 1));
     calc_voronoi(block_size * (thread_num - 1), nodes.size());
     for_each(threads_voronoi.begin(), threads_voronoi.end(), mem_fn(&thread::join));
-    cout << "finish calculating voronoi neighbors" << endl;
+    cout << "finish calculating voronoi neighbors.\t" << timer.format() << endl;
 }

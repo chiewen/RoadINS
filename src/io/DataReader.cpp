@@ -9,6 +9,7 @@
 
 #include "DataReader.h"
 #include "../util/TimePrinter.h"
+#include "boost/timer/timer.hpp"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ vector<shared_ptr<Node>> DataReader::read_data(const string &name) {
 }
 
 void DataReader::read_nodes(const string &name, vector<shared_ptr<Node>> &all_nodes) {
+    boost::timer::cpu_timer timer;
+
     cout << "start reading node file from " << name << ".co   " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".co");
 
@@ -47,23 +50,27 @@ void DataReader::read_nodes(const string &name, vector<shared_ptr<Node>> &all_no
     }
     all_nodes.insert(all_nodes.end(), nodes.begin(), nodes.end());
 
-    cout << "nodes finished." << TimePrinter::now << endl;
+    cout << "nodes finished." << TimePrinter::now << "\t" << timer.format() << endl;
 }
 
 vector<string> DataReader::read_file(const string &name) {
     vector<string> vec_lines;
     string line;
     ifstream node_file(name);
+    for (int i = 0; i < 7; i++) getline(node_file, line);
     while (getline(node_file, line)) vec_lines.push_back(line);
     node_file.close();
     return vec_lines;
 }
 
 void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_nodes) {
+    boost::timer::cpu_timer timer;
+
     cout << "start reading road file from " << name << ".gr  " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".gr");
 
     cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
+
     auto thread_num = thread::hardware_concurrency();
     auto block_size = vec_lines.size() / thread_num;
     regex reg_road("a (\\d*) (\\d*) (\\d*)");
@@ -92,5 +99,5 @@ void DataReader::read_roads(const string &name, vector<shared_ptr<Node>> &all_no
         vec_threads.emplace_back(insert_road, block_size * i, block_size * (i + 1));
     insert_road(block_size * (thread_num - 1), vec_lines.size());
     for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
-    cout << "finish reading roads " << TimePrinter::now << endl;
+    cout << "finish reading roads " << TimePrinter::now << "\t" << timer.format() << endl;
 }

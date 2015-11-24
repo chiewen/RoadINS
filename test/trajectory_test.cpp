@@ -7,7 +7,7 @@
 #include "../src/network/Trajectory.h"
 #include "test_fixture.h"
 #include "../src/algorithm/Dijkstra.h"
-#include "../src/algorithm/MkNN.h"
+#include "../src/algorithm/INS.h"
 #include "../src/network/RoadNetwork.h"
 
 TEST(Trajectory, Simple) {
@@ -72,7 +72,8 @@ TEST_F(NodesNetTest, Construct) {
 //        if (n->isSite && n->voronoi_neighbors.size() < 1)
 //            cout << "ins" << n->voronoi_neighbors.size() << endl;
     try {
-        MkNN::move(path, 5);
+        INS ins;
+        ins.move(path, 5);
     }catch (exception &e) {
         cout << "B" << e.what();
     }
