@@ -13,15 +13,15 @@
 
 using boost::serialization::singleton;
 
-class RoadNetwork : public singleton<vector<shared_ptr<Node>>> {
+class RoadNetwork : public singleton<vector<PNode>> {
     static struct _init {
         _init();
     } __init;
 
 public:
     static void reset();
-    static void add_sites(const vector<shared_ptr<Node>> &nodes, double ratio);
-    static void set_nearest(const vector<shared_ptr<Node>> &nodes);
+    static void add_sites(const vector<PNode> &nodes, double ratio);
+    static void set_nearest(const vector<PNode> &nodes);
 };
 
 

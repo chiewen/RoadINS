@@ -9,7 +9,11 @@
 
 using namespace std;
 
-struct VStar: public MknnProcessor {
+class VStar: public MknnProcessor {
+private:
+    int x;
+public:
+    VStar(int x);
     void move(Trajectory trajectory, int k);
 };
 

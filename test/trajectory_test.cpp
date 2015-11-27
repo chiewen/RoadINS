@@ -15,7 +15,7 @@ TEST(Trajectory, Simple) {
     auto n1 = make_shared<Node>(1, 0, 0);
     auto n2 = make_shared<Node>(2, 0, 0);
 
-    vector<shared_ptr<Road>> roads;
+    vector<PRoad> roads;
     roads.push_back(make_shared<Road>(n0, n1, 100));
     roads.push_back(make_shared<Road>(n1, n2, 120));
 
@@ -49,7 +49,7 @@ TEST_F(NodesNetTest, Construct) {
 
     auto &nodes = RoadNetwork::get_mutable_instance();
 
-    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const shared_ptr<Node> &n) {
+    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const PNode &n) {
         return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]
     }));
 

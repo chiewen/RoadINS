@@ -4,5 +4,5 @@
 
 #include "Road.h"
 
-Road::Road(const std::shared_ptr<Node> &t1, const std::shared_ptr<Node> &t2, double distance) :
+Road::Road(const PNode &t1, const PNode &t2, double distance) :
         from(t1), to(t2), distance(distance) { }

@@ -12,7 +12,7 @@
 
 class NodesNetTest : public ::testing::Test {
 protected:
-    vector<shared_ptr<Node>> nodes;
+    vector<PNode> nodes;
 
     virtual void SetUp();
 };

@@ -17,8 +17,10 @@ struct Road {
     weak_ptr<Node> to;
     double distance;
 
-    Road(const shared_ptr<Node> &t1, const shared_ptr<Node> &t2, double distance);
+    Road(const PNode &t1, const PNode &t2, double distance);
 };
+
+typedef shared_ptr<Road> PRoad;
 
 
 #endif //ROADINS_ROAD_H

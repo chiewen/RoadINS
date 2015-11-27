@@ -5,7 +5,7 @@
 #include "Node.h"
 #include "Trajectory.h"
 
-Trajectory::Trajectory(const vector<shared_ptr<Road>> &roads, double step) : roads(roads), step(step) {
+Trajectory::Trajectory(const vector<PRoad> &roads, double step) : roads(roads), step(step) {
     current_road = this->roads.begin();
     dist_to = (*current_road)->distance;
 }
@@ -14,7 +14,7 @@ bool Trajectory::has_next() {
     return current_road != roads.end();
 }
 
-pair<shared_ptr<Road>, double> Trajectory::get_then_forward() {
+pair<PRoad, double> Trajectory::get_then_forward() {
     auto result = make_pair(*current_road, dist_to);
     if (dist_to > step) dist_to -= step;
     else {

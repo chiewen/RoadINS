@@ -31,4 +31,6 @@ struct Node {
     Node(long id, double x, double y);
 };
 
+typedef shared_ptr<Node> PNode;
+
 #endif //ROADINS_NODE_H

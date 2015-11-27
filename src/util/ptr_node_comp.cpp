@@ -5,4 +5,4 @@
 
 #include "../network/Node.h"
 
-bool ptr_node_less::operator()(const weak_ptr<Node> &pn1, const weak_ptr<Node> &pn2) { return pn1.lock()->id < pn2.lock()->id; }
+bool ptr_node_less::operator()(const PNode &pn1, const PNode &pn2) { return pn1->id < pn2->id; }

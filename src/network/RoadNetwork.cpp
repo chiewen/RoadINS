@@ -27,9 +27,9 @@ void RoadNetwork::reset() {
     const string file_path = pt.get<string>("conf.file_path");
     const double ratio = pt.get<double>("conf.site_ratio");
 
-    vector<shared_ptr<Node>> nodes = DataReader::read_data(file_path);
+    vector<PNode> nodes = DataReader::read_data(file_path);
     cout << "nodes num: " << nodes.size() << endl;
-    cout << "roads num: " << accumulate(nodes.begin(), nodes.end(), 0, [](long sum, const shared_ptr<Node> &node) {
+    cout << "roads num: " << accumulate(nodes.begin(), nodes.end(), 0, [](long sum, const PNode &node) {
         return sum + node->roads.size();
     }) << endl;
 
@@ -38,7 +38,7 @@ void RoadNetwork::reset() {
     get_mutable_instance().swap(nodes);
 }
 
-void RoadNetwork::add_sites(const vector<shared_ptr<Node>> &nodes, double ratio) {
+void RoadNetwork::add_sites(const vector<PNode> &nodes, double ratio) {
     double sum = 0;
     long i = 1;
     for (auto &n: nodes) {
@@ -50,7 +50,7 @@ void RoadNetwork::add_sites(const vector<shared_ptr<Node>> &nodes, double ratio)
     }
 }
 
-void RoadNetwork::set_nearest(const vector<shared_ptr<Node>> &nodes) {
+void RoadNetwork::set_nearest(const vector<PNode> &nodes) {
     boost::timer::cpu_timer timer;
     auto thread_num = thread::hardware_concurrency();
     auto block_size = nodes.size() / thread_num;

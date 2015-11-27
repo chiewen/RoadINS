@@ -11,13 +11,13 @@
 using namespace std;
 
 Trajectory TrajectoryConstructor::construct_random(
-        shared_ptr<Node> source_node, int roads_count) {
-    vector<shared_ptr<Road>> roads;
+        PNode source_node, int roads_count) {
+    vector<PRoad> roads;
     set<long> already_have;
-    shared_ptr<Node> current_node(source_node);
+    PNode current_node(source_node);
     for (; roads.size() < roads_count;) {
         auto next_road = find_if(current_node->roads.begin(), current_node->roads.end(),
-                                 [&](const shared_ptr<Road> &ptr) {
+                                 [&](const PRoad &ptr) {
                                      return already_have.find(ptr->to.lock()->id) == already_have.end();
                                  });
         already_have.insert(current_node->id);
@@ -33,7 +33,7 @@ Trajectory TrajectoryConstructor::construct_random(
     return Trajectory(roads);
 }
 
-Trajectory TrajectoryConstructor::construct_shortest_path(shared_ptr<Node> source_node,
-                                                          shared_ptr<Node> destination_node) {
+Trajectory TrajectoryConstructor::construct_shortest_path(PNode source_node,
+                                                          PNode destination_node) {
     return Trajectory(Dijkstra::shortest_path(source_node, destination_node));
 }

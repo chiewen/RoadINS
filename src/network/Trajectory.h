@@ -14,11 +14,11 @@ using namespace std;
 
 class Trajectory {
 public:
-    typedef vector<shared_ptr<Road>> roads_type;
+    typedef vector<PRoad> roads_type;
 
-    Trajectory(const vector<shared_ptr<Road>> &roads, double step = 50);
+    Trajectory(const vector<PRoad> &roads, double step = 50);
 
-    pair<shared_ptr<Road>, double> get_then_forward();
+    pair<PRoad, double> get_then_forward();
 
     roads_type::difference_type road_count();
 

@@ -10,6 +10,6 @@ class Node;
 using namespace std;
 
 struct ptr_node_less {
-    bool operator()(const weak_ptr<Node> &pn1, const weak_ptr<Node> &pn2);
+    bool operator()(const shared_ptr<Node> &pn1, const shared_ptr<Node> &pn2);
 };
 #endif //ROADINS_PTR_NODE_COMP_H
