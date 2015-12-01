@@ -23,11 +23,16 @@ public:
                       double dist_to_node, int k, set<long> &top_k,
                       set<PNode, ptr_node_less> &ptr_top_k);
 
+    static void top_k_vstar(const PNode &ptr_node,
+                                      double dist_to_node, int k, vector<PNode> &top_k);
+
     static vector<PRoad>
             shortest_path(const PNode &ptr_from, const PNode &ptr_to);
 
     static bool verify(int k, const PNode &query_object, double dist_to_next,
                        const set<long> &top_k, const set<long> &ins);
+
+    static double distance_to(const PNode &ptr_from, double dist, const PNode &ptr_to);
 
 private:
     typedef map<long, pair<double, PNode>> known_map;
