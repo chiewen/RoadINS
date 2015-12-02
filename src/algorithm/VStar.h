@@ -12,19 +12,22 @@ using namespace std;
 
 class VStar : public MknnProcessor {
 private:
+    int k;
     int x;
-    vector<PNode> ordered_top_k;
-
-    typedef map<long, vector<pair<PNode, double>>> FrrMap;
+    vector<PNode> ordered_k_x;
+    pair<PRoad, double> q_b;
+    PNode z;
+    double z_dist;
+    typedef map<long, map<long, double>> FrrMap;
     FrrMap frrMap;
 public:
-    VStar(int x);
+    VStar(int k, int x);
 
-    void move(Trajectory trajectory, int k);
+    void move(Trajectory trajectory);
 
-    void calculate(const pair<PRoad,double> &pos, int k, int x);
+    void calculate(const pair<PRoad, double> &pos);
 
-    bool validate_knn(const pair<PRoad, double> &pos, int k, int x);
+    bool validate_knn(const pair<PRoad, double> &pos);
 };
 
 

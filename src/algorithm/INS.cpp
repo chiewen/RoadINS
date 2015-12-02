@@ -7,7 +7,7 @@
 #include "INS.h"
 #include "Dijkstra.h"
 
-void INS::move(Trajectory trajectory, int k) {
+void INS::move(Trajectory trajectory) {
     top_k.clear();
     ins.clear();
 

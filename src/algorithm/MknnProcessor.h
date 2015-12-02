@@ -9,7 +9,7 @@
 #include "../network/Trajectory.h"
 
 struct MknnProcessor {
-    virtual void move(Trajectory trajectory, int k) = 0;
+    virtual void move(Trajectory trajectory) = 0;
 };
 
 

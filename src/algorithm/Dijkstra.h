@@ -24,7 +24,10 @@ public:
                       set<PNode, ptr_node_less> &ptr_top_k);
 
     static void top_k_vstar(const PNode &ptr_node,
-                                      double dist_to_node, int k, vector<PNode> &top_k);
+                            double dist_to_node, int k, vector<PNode> &top_k);
+
+    static void top_k_with_distance(const PNode &ptr_node, int k, const vector<PNode> &ordered_k_x,
+                                    map<long, double> &top_k);
 
     static vector<PRoad>
             shortest_path(const PNode &ptr_from, const PNode &ptr_to);

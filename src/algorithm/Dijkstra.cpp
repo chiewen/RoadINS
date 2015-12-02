@@ -76,7 +76,7 @@ void Dijkstra::top_k(const PNode &ptr_node, double dist_to_node, int k,
 
 void Dijkstra::top_k_vstar(const PNode &ptr_node, double dist_to_node, int k, vector<PNode> &top_k) {
     known_map known_nodes;
-    known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
+    known_nodes.insert(make_pair(ptr_node->id, make_pair(dist_to_node, ptr_node)));
     top_k.clear();
     set<long> searched;
     while (!known_nodes.empty()) {
@@ -177,4 +177,36 @@ double Dijkstra::distance_to(const PNode &ptr_from, double dist, const PNode &pt
     auto roads = shortest_path(ptr_from, ptr_to);
     return dist + accumulate(roads.begin(), roads.end(), 0,
                              [](double i, const PRoad &r) { return i + r->distance; });
+}
+
+void Dijkstra::top_k_with_distance(const PNode &ptr_node, int k, const vector<PNode> &ordered_k_x,
+                                   map<long, double> &top_k) {
+    known_map known_nodes;
+    known_nodes.insert(make_pair(ptr_node->id, make_pair(0, ptr_node)));
+    top_k.clear();
+    set<long> searched;
+    while (!known_nodes.empty()) {
+        typedef known_map::value_type map_value;
+        auto min = min_element(known_nodes.begin(), known_nodes.end(),
+                               [](const map_value &l, const map_value &r) { return l.second.first < r.second.first; });
+        auto p_min = min->second.second;
+        if (find_if(ordered_k_x.begin(), ordered_k_x.end(), [&p_min](const PNode &p) {
+            return p->id == p_min->id;
+        }) != ordered_k_x.end()) {
+            top_k.insert(make_pair(p_min->id, min->second.first));
+            if (top_k.size() == k) break;
+        }
+        auto d_min = min->second.first;
+        searched.insert(p_min->id);
+        known_nodes.erase(min);
+        for (auto &n: p_min->roads) {
+            auto pn = PNode(n->to);
+            if (searched.find(pn->id) != searched.end()) continue;
+            auto m = known_nodes.find(pn->id);
+            if (m == known_nodes.end())
+                known_nodes[pn->id] = make_pair(d_min + n->distance, pn);
+            else if (m->second.first > d_min + n->distance)
+                m->second.first = d_min + n->distance;
+        }
+    }
 }

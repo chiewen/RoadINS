@@ -9,6 +9,7 @@
 #include "../src/algorithm/Dijkstra.h"
 #include "../src/algorithm/INS.h"
 #include "../src/network/RoadNetwork.h"
+#include "../src/algorithm/VStar.h"
 
 TEST(Trajectory, Simple) {
     auto n0 = make_shared<Node>(0, 0, 0);
@@ -71,10 +72,9 @@ TEST_F(NodesNetTest, Construct) {
 //    for (auto &n: nodes)
 //        if (n->isSite && n->voronoi_neighbors.size() < 1)
 //            cout << "ins" << n->voronoi_neighbors.size() << endl;
-    try {
-        INS ins;
-        ins.move(path, 5);
-    }catch (exception &e) {
-        cout << "B" << e.what();
-    }
+
+//        INS ins;
+//        ins.move(path, 5);
+        VStar vs(5, 3);
+        vs.move(path);
 }
