@@ -8,8 +8,9 @@
 #include "Dijkstra.h"
 
 void INS::move(Trajectory trajectory, int k) {
-    set<long> top_k, ins;
-    set<PNode, ptr_node_less> ptr_top_k;
+    top_k.clear();
+    ins.clear();
+
     refresh(k, top_k, ptr_top_k, ins, trajectory.get_then_forward());
 
     for (auto pos = trajectory.get_then_forward(); trajectory.has_next(); pos = trajectory.get_then_forward())

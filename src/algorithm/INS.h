@@ -9,11 +9,14 @@
 #include "../network/Trajectory.h"
 #include "MknnProcessor.h"
 
-struct INS : public MknnProcessor {
+class INS : public MknnProcessor {
+    set<long> top_k, ins;
+    set<PNode, ptr_node_less> ptr_top_k;
+public:
     void move(Trajectory trajectory, int k);
 
-    void refresh(int k, set<long> &top_k,  set<PNode, ptr_node_less> &ptr_top_k, set<long> &ins,
-                        const pair<PRoad, double> &pos);
+    void refresh(int k, set<long> &top_k, set<PNode, ptr_node_less> &ptr_top_k, set<long> &ins,
+                 const pair<PRoad, double> &pos);
 };
 
 
