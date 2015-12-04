@@ -42,7 +42,7 @@ void Dijkstra::find_nearest(const PNode &ptr_node) {
 
 
 void Dijkstra::top_k(const PNode &ptr_node, double dist_to_node, int k,
-                     set<long> &top_k, set<PNode, ptr_node_less> &ptr_top_k) {
+                     set<long> &top_k, set<PNode, ptr_node_less> &ptr_top_k, long &page) {
     known_map known_nodes;
     known_nodes[ptr_node->id] = make_pair(dist_to_node, ptr_node);
     ptr_top_k.clear();
@@ -60,6 +60,7 @@ void Dijkstra::top_k(const PNode &ptr_node, double dist_to_node, int k,
         searched.insert(p_min->id);
         known_nodes.erase(min);
         for (auto &n: p_min->roads) {
+            ++page;
             auto pn = PNode(n->to);
             if (searched.find(pn->id) != searched.end()) continue;
             auto m = known_nodes.find(pn->id);
@@ -74,9 +75,11 @@ void Dijkstra::top_k(const PNode &ptr_node, double dist_to_node, int k,
               [](const PNode &n) { return n->id; });
 }
 
-void Dijkstra::top_k_vstar(const PNode &ptr_node, double dist_to_node, int k, vector<PNode> &top_k) {
+void Dijkstra::top_k_vstar(const pair<PRoad, double> &pos, int k, vector<PNode> &top_k, long &page) {
     known_map known_nodes;
-    known_nodes.insert(make_pair(ptr_node->id, make_pair(dist_to_node, ptr_node)));
+    known_nodes.insert(make_pair(pos.first->to.lock()->id, make_pair(pos.second, pos.first->to.lock())));
+    known_nodes.insert(make_pair(pos.first->from.lock()->id,
+                                 make_pair(pos.first->distance - pos.second, pos.first->from.lock())));
     top_k.clear();
     set<long> searched;
     while (!known_nodes.empty()) {
@@ -92,6 +95,7 @@ void Dijkstra::top_k_vstar(const PNode &ptr_node, double dist_to_node, int k, ve
         searched.insert(p_min->id);
         known_nodes.erase(min);
         for (auto &n: p_min->roads) {
+            ++page;
             auto pn = PNode(n->to);
             if (searched.find(pn->id) != searched.end()) continue;
             auto m = known_nodes.find(pn->id);
@@ -209,4 +213,49 @@ void Dijkstra::top_k_with_distance(const PNode &ptr_node, int k, const vector<PN
                 m->second.first = d_min + n->distance;
         }
     }
+}
+
+double Dijkstra::distance_to_bidirection(const pair<PRoad, double> &pos, const PNode &ptr_to) {
+    return min(distance_to(pos.first->to.lock(), pos.second, ptr_to),
+               distance_to(pos.first->from.lock(), pos.first->distance - pos.second, ptr_to));
+}
+
+vector<PRoad> Dijkstra::shortest_path_length(const PNode &ptr_from, long length) {
+    vector<PRoad> result;
+    map<long, tuple<double, PNode, PRoad>> known_nodes;
+    known_nodes.insert(make_pair(ptr_from->id, make_tuple(0, ptr_from, nullptr)));
+    map<long, PRoad> searched;
+    while (!known_nodes.empty()) {
+        typedef remove_reference<decltype(known_nodes)>::type::value_type map_value;
+        auto min = min_element(known_nodes.begin(), known_nodes.end(),
+                               [](const map_value &l, const map_value &r) {
+                                   return get<0>(l.second) < get<0>(r.second);
+                               });
+        auto p_min = get<1>(min->second);
+        auto d_min = get<0>(min->second);
+        searched.insert(make_pair(p_min->id, get<2>(min->second)));
+        known_nodes.erase(min);
+
+        long count = 0;
+        for (auto previous = searched[p_min->id]; previous; previous = searched.at(previous->from.lock()->id))
+            ++count;
+        if (count >= length) {
+            for (auto previous = searched[p_min->id]; previous; previous = searched.at(previous->from.lock()->id))
+                result.push_back(previous);
+            break;
+        }
+        else
+            for (auto &n: p_min->roads) {
+                auto pn = PNode(n->to);
+                if (searched.find(pn->id) != searched.end()) continue;
+                auto m = known_nodes.find(pn->id);
+                if (m == known_nodes.end())
+                    known_nodes.insert(make_pair(pn->id, make_tuple(d_min + n->distance, pn, n)));
+                else if (get<0>(m->second) > d_min + n->distance) {
+                    get<0>(m->second) = d_min + n->distance;
+                    get<2>(m->second) = n;
+                }
+            }
+    }
+    return result;
 }

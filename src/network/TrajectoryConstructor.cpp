@@ -1,17 +1,17 @@
 //
 // Created by chiewen on 2015/11/10.
 //
+#include <iostream>
 #include <set>
 #include <algorithm>
 #include "TrajectoryConstructor.h"
 
-#include "Node.h"
 #include "../algorithm/Dijkstra.h"
 
 using namespace std;
 
 Trajectory TrajectoryConstructor::construct_random(
-        PNode source_node, int roads_count) {
+        const PNode &source_node, int roads_count, int step) {
     vector<PRoad> roads;
     set<long> already_have;
     PNode current_node(source_node);
@@ -30,10 +30,11 @@ Trajectory TrajectoryConstructor::construct_random(
             current_node = (*next_road)->to.lock();
         }
     }
-    return Trajectory(roads);
+
+    return Trajectory(roads, step);
 }
 
-Trajectory TrajectoryConstructor::construct_shortest_path(PNode source_node,
-                                                          PNode destination_node) {
-    return Trajectory(Dijkstra::shortest_path(source_node, destination_node));
+Trajectory TrajectoryConstructor::construct_shortest_path(const PNode &source_node,
+                                                          long length, int step) {
+    return Trajectory(Dijkstra::shortest_path_length(source_node, length), step);
 }

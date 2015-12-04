@@ -9,8 +9,8 @@
 #include "Trajectory.h"
 
 struct TrajectoryConstructor {
-    static Trajectory construct_random(PNode source_node, int roads_count);
-    static Trajectory construct_shortest_path(PNode source_node, PNode destination_node);
+    static Trajectory construct_random(const PNode &source_node, int roads_count, int step);
+    static Trajectory construct_shortest_path(const PNode &source_node, long length, int step);
 
 };
 

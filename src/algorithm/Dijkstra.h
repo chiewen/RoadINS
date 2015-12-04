@@ -21,10 +21,9 @@ public:
 
     static void top_k(const PNode &ptr_node,
                       double dist_to_node, int k, set<long> &top_k,
-                      set<PNode, ptr_node_less> &ptr_top_k);
+                      set<PNode, ptr_node_less> &ptr_top_k, long &page);
 
-    static void top_k_vstar(const PNode &ptr_node,
-                            double dist_to_node, int k, vector<PNode> &top_k);
+    static void top_k_vstar(const pair<PRoad, double> &pos, int k, vector<PNode> &top_k, long &page);
 
     static void top_k_with_distance(const PNode &ptr_node, int k, const vector<PNode> &ordered_k_x,
                                     map<long, double> &top_k);
@@ -32,10 +31,15 @@ public:
     static vector<PRoad>
             shortest_path(const PNode &ptr_from, const PNode &ptr_to);
 
+    static vector<PRoad>
+            shortest_path_length(const PNode &ptr_from, long length);
+
     static bool verify(int k, const PNode &query_object, double dist_to_next,
                        const set<long> &top_k, const set<long> &ins);
 
     static double distance_to(const PNode &ptr_from, double dist, const PNode &ptr_to);
+
+    static double distance_to_bidirection(const pair<PRoad, double> &pos, const PNode &ptr_to);
 
 private:
     typedef map<long, pair<double, PNode>> known_map;

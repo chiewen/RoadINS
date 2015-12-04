@@ -27,6 +27,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/experiment.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/net_test.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/test_fixture.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/test_fixture.h" isTestSource="false" />

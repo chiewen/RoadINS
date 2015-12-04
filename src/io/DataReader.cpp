@@ -87,9 +87,19 @@ void DataReader::read_roads(const string &name, vector<PNode> &all_nodes) {
                                           return a->id < b->id;
                                       });
                 if (a1 != all_nodes.end() && a2 != all_nodes.end()) {
+                    //we use the dataset as undirected graph
+                    if (find_if((*a1)->roads.begin(), (*a1)->roads.end(), [&a2](const PRoad &r) {
+                        return r->to.lock()->id == (*a2)->id;
+                    }) != (*a1)->roads.end())
+                        continue;
                     auto road = make_shared<Road>(*a1, *a2, stod(m.str(3)));
-                    lock_guard<mutex> {(*a1)->mutex_roads};
-                    (*a1)->roads.push_back(road);
+                    {
+                        lock_guard<mutex> {(*a1)->mutex_roads};
+                        (*a1)->roads.push_back(road);
+                    }
+                    auto road1 = make_shared<Road>(*a2, *a1, stod(m.str(3)));
+                    lock_guard<mutex> {(*a2)->mutex_roads};
+                    (*a2)->roads.push_back(road1);
                 }
             }
         }

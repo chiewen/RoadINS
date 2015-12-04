@@ -18,6 +18,13 @@ public:
 
     Trajectory(const vector<PRoad> &roads, double step = 50);
 
+    Trajectory(const Trajectory &trajectory) {
+        step = trajectory.step;
+        roads = trajectory.roads;
+        current_road = roads.begin();
+        dist_to = 0;
+    }
+
     pair<PRoad, double> get_then_forward();
 
     roads_type::difference_type road_count();

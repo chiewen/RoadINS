@@ -3,13 +3,15 @@
 //
 
 #include <gtest/gtest.h>
+#include <boost/timer/timer.hpp>
 #include "../src/network/Node.h"
 #include "../src/network/Trajectory.h"
 #include "test_fixture.h"
-#include "../src/algorithm/Dijkstra.h"
 #include "../src/algorithm/INS.h"
 #include "../src/network/RoadNetwork.h"
 #include "../src/algorithm/VStar.h"
+#include "../src/network/TrajectoryConstructor.h"
+#include "../src/util/TimePrinter.h"
 
 TEST(Trajectory, Simple) {
     auto n0 = make_shared<Node>(0, 0, 0);
@@ -50,31 +52,57 @@ TEST_F(NodesNetTest, Construct) {
 
     auto &nodes = RoadNetwork::get_mutable_instance();
 
-    auto path = Dijkstra::shortest_path(nodes[0], *find_if(nodes.begin(), nodes.end(), [](const PNode &n) {
-        return n->id == 201071;//this node is the 5000th nearest neighbor of nodes[0]
-    }));
+    auto path2 = TrajectoryConstructor::construct_random(nodes[100], 500, 50);
+    cout << "path 2 " << path2.road_count() << endl;
+    auto path1 = TrajectoryConstructor::construct_shortest_path(
+            nodes[0], 500, 50);
+    cout << "path 1 " << path1.road_count() << endl;
 
-//    for (auto r: path) {
-//        cout << r->from.lock()->id << "\tto\t" << r->to.lock()->id << endl;
-//    }
-//    cout << "total:\t" << path.size() << endl;
+    {
+        VStar vs(10, 6);
+        cout << "VS " << TimePrinter::now << endl;
+        boost::timer::cpu_timer timer;
+        vs.move(path1);
+        cout << "VS\ntimer: " << timer.format();
+        cout << "page:" << vs.num_page() << endl;
+        cout << "server:" << vs.num_server() << endl;
+        cout << "client:" << vs.num_client() << endl;
+        cout << "communication:" << vs.num_communication() << endl;
+        cout << "total step:" << vs.total_step << endl << endl;
+        cout << "VS" << TimePrinter::now << endl;
 
-//    for (auto &n : nodes) {
-//        cout << n-> id << "\t" << (n->isSite ? "y" : "n") << "\t" << n->roads.size() << "\t" << n->nearest_site.first.lock()->id
-//        << "\t" << (n->isSite ? to_string(n->voronoi_neighbors.size()) : "-") << endl;
-//    }
-//
-//    for (auto &n : nodes) {
-//        for (auto &r : n->roads) if (r->from.lock()->nearest_site.first.lock()->id == 197743)
-//                cout << "r:" << r->to.lock()->nearest_site.first.lock()->id << endl;
-//    }
+        INS ins(10);
+        cout << "INS " << TimePrinter::now << endl;
+        boost::timer::cpu_timer timer1;
+        ins.move(path1);
+        cout << "INS\ntimer: " << timer1.format();
+        cout << "page:" << ins.num_page() << endl;
+        cout << "server:" << ins.num_server() << endl;
+        cout << "client:" << ins.num_client() << endl;
+        cout << "communication:" << ins.num_communication() << endl;
+        cout << "total step:" << ins.total_step << endl << endl;
+    }
+    {
+        VStar vs(10, 6);
+        cout << "VS " << TimePrinter::now << endl;
+        boost::timer::cpu_timer timer;
+        vs.move(path2);
+        cout << "VS\ntimer: " << timer.format();
+        cout << "page:" << vs.num_page() << endl;
+        cout << "server:" << vs.num_server() << endl;
+        cout << "client:" << vs.num_client() << endl;
+        cout << "communication:" << vs.num_communication() << endl;
+        cout << "total step:" << vs.total_step << endl << endl;
 
-//    for (auto &n: nodes)
-//        if (n->isSite && n->voronoi_neighbors.size() < 1)
-//            cout << "ins" << n->voronoi_neighbors.size() << endl;
-
-//        INS ins;
-//        ins.move(path, 5);
-        VStar vs(5, 3);
-        vs.move(path);
+        INS ins(10);
+        cout << "INS " << TimePrinter::now << endl;
+        boost::timer::cpu_timer timer1;
+        ins.move(path2);
+        cout << "INS\ntimer: " << timer1.format();
+        cout << "page:" << ins.num_page() << endl;
+        cout << "server:" << ins.num_server() << endl;
+        cout << "client:" << ins.num_client() << endl;
+        cout << "communication:" << ins.num_communication() << endl;
+        cout << "total step:" << ins.total_step << endl << endl;
+    }
 }
