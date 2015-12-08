@@ -34,7 +34,7 @@ double Trajectory::getStep() const {
 }
 
 void Trajectory::setStep(double step) {
-    Trajectory::step = step;
+    this->step = step;
 }
 
 double Trajectory::total_distance() {

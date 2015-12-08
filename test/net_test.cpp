@@ -7,12 +7,17 @@
 #include "gtest/gtest.h"
 #include "../src/io/DataReader.h"
 #include "test_fixture.h"
+#include "../src/network/Trajectory.h"
+#include "../src/network/RoadNetwork.h"
+#include "../src/network/TrajectoryConstructor.h"
 
-//
-//TEST_F(NodesNetTest, Node) {
-//    DataReader::add_sites(nodes, 0.1);
-//    DataReader::set_nearest(nodes);
-//    ASSERT_EQ(1, 1);
-//}
+
+TEST_F(NodesNetTest, Traj) {
+    auto &nodes = RoadNetwork::get_mutable_instance();
+
+    auto t = TrajectoryConstructor::construct_random(nodes[0], 500, 50);
+
+    cout <<  to_string(t.total_distance()) << "\t" << t.road_count() << "\t" <<to_string(t.total_distance()/50)<< endl;
+}
 
 

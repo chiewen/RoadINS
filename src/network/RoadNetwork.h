@@ -19,9 +19,10 @@ class RoadNetwork : public singleton<vector<PNode>> {
     } __init;
 
 public:
-    static void reset();
+    static void reset(double ratio = -1);
     static void add_sites(const vector<PNode> &nodes, double ratio);
     static void set_nearest(const vector<PNode> &nodes);
+    static void reset_ratio(double ratio);
 };
 
 
