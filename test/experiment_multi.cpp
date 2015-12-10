@@ -1,7 +1,6 @@
 //
-// Created by chiewen on 2015/12/6.
+// Created by chiewen on 2015/12/10.
 //
-
 
 #include <gtest/gtest.h>
 #include <thread>
@@ -24,11 +23,16 @@ void print_result(string name, MPIter start, MPIter end) {
         v_communication.push_back((*p)->num_communication());
     }
 
+    sort(v_page.begin(), v_page.end());
+    sort(v_server.begin(), v_server.end());
+    sort(v_client.begin(), v_client.end());
+    sort(v_communication.begin(), v_communication.end());
+
     cout << name << ":\t"
-    << accumulate(v_page.begin(), v_page.begin() + 3, 0) / 3 << "\t"
-    << accumulate(v_server.begin(), v_server.begin() + 3, 0) / 3 << "\t"
-    << accumulate(v_client.begin(), v_client.begin() + 3, 0) / 3 << "\t"
-    << accumulate(v_communication.begin(), v_communication.begin() + 3, 0) / 3 << "\t";
+    << accumulate(v_page.begin() + 4, v_page.begin() + 8, 0) / 4 << "\t"
+    << accumulate(v_server.begin() + 4, v_server.begin() + 8, 0) / 4 << "\t"
+    << accumulate(v_client.begin() + 4, v_client.begin() + 8, 0) / 4 << "\t"
+    << accumulate(v_communication.begin() + 4, v_communication.begin() + 8, 0) / 4 << "\t";
 }
 
 void execute(const vector<PNode> &nodes, int length, int k, int x, int step) {
@@ -70,23 +74,31 @@ void execute(const vector<PNode> &nodes, vector<Trajectory> &trajectories, int k
         t.setStep(step);
 
     vector<shared_ptr<MknnProcessor>> mps;
-    mps.reserve(12);
-    for (int i = 0; i < 6; ++i)
+    mps.reserve(48);
+    for (int i = 0; i < 24; ++i)
         mps.emplace_back(make_shared<VStar>(k, x));
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < 24; ++i)
         mps.emplace_back(make_shared<INS>(k));
 
-    for (int i = 0; i < 12; i++)
-        mps[i]->move(trajectories[i]);
+    vector<thread> vt;
+    vt.reserve(12);
+    for (int j = 0; j < 4; ++j) {
+        for (int i = 12 * j; i < 12 * (j + 1); i++)
+            vt.emplace_back([&mps, i, &trajectories]() {
+                mps[i]->move(trajectories[i]);
+            });
+        for (auto &t : vt) t.join();
+        vt.clear();
+    }
 
-    print_result("VR", mps.begin(), mps.begin() + 3);
-    print_result("VD", mps.begin() + 3, mps.begin() + 6);
-    print_result("IR", mps.begin() + 6, mps.begin() + 9);
-    print_result("ID", mps.begin() + 9, mps.end());
+    print_result("VR", mps.begin(), mps.begin() + 12);
+    print_result("VD", mps.begin() + 12, mps.begin() + 24);
+    print_result("IR", mps.begin() + 24, mps.begin() + 36);
+    print_result("ID", mps.begin() + 36, mps.end());
     cout << endl;
 }
 
-TEST(Experiment, First) {
+TEST(Experiment, Multi) {
     auto &nodes = RoadNetwork::get_mutable_instance();
 
     int length = 500;
@@ -95,10 +107,13 @@ TEST(Experiment, First) {
     int step = 40;
 
     vector<Trajectory> trajectories;
-    trajectories.reserve(12);
+    trajectories.reserve(48);
     cout << "\n============= experiment start at " << TimePrinter::now << " =============\n" << endl;
     for (int i = 0; i < 120000; i += 40000) {
         auto traj = TrajectoryConstructor::construct_random(nodes[i], length, step);
+        trajectories.emplace_back(traj);
+        trajectories.emplace_back(traj);
+        trajectories.emplace_back(traj);
         trajectories.emplace_back(traj);
     }
 
@@ -111,6 +126,9 @@ TEST(Experiment, First) {
             auto t = TrajectoryConstructor::construct_shortest_path(nodes[i], length, step);
             lock_guard<mutex> {m_traj};
             trajectories.push_back(t);
+            trajectories.push_back(t);
+            trajectories.push_back(t);
+            trajectories.push_back(t);
         });
 
     for (auto &t : vt)
@@ -118,22 +136,24 @@ TEST(Experiment, First) {
 
     cout << "D " << TimePrinter::now << endl;
 
-    copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
+    copy(trajectories.begin(), trajectories.begin() + 24, back_inserter(trajectories));
 
-    cout << endl << "step = 50 to 1000 step 25" << endl;
+//    cout << endl << "k = 1 to 20" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, i, x, step);
+
+//    cout << endl << "x = 5 to 20" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, k, i, step);
+
+    cout << endl << "step = 50 to 2000 step 50" << endl;
     for (int i = 50; i < 1000; i += 25)
         execute(nodes, trajectories, k, x, i);
 
-    cout << endl << "ratio = 0.05 to 0.11 step 0.005" << endl;
+    cout << endl << "ratio = 0.25 to 5 step 0.25" << endl;
     for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
         RoadNetwork::reset_ratio(ratio);
         execute(nodes, trajectories, k, x, step);
     }
 
-    cout << endl << "x = 1 to 10" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, k, i, step);
-
-    cout << endl << "k = 1 to 20" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, i, x, step);}
+}
