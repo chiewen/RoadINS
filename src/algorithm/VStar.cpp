@@ -49,6 +49,7 @@ bool VStar::validate_knn(const pair<PRoad, double> &pos) {
     }
 
     bool should_recalculate = true;
+    bool should_communicate = false;
     while (should_recalculate) {
         should_recalculate = false;
         for (int i = 0; i < k + x - 1; i++)
@@ -56,10 +57,12 @@ bool VStar::validate_knn(const pair<PRoad, double> &pos) {
                     pFrom->second[ordered_k_x[i]->id] + pos.second - pos.second) >
                 min(pTo->second[ordered_k_x[i + 1]->id] + pos.second,
                     pFrom->second[ordered_k_x[i + 1]->id] + pos.second - pos.second)) {
+                if (x > k) should_communicate = true;
                 swap(ordered_k_x[i], ordered_k_x[i + 1]);
                 should_recalculate = true;
             }
     }
+    if (should_communicate) communication += 1;
 
     if (z->id != ordered_k_x[k + x - 1]->id) {
         z = ordered_k_x[k + x - 1];
