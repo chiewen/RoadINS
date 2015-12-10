@@ -56,7 +56,6 @@ bool VStar::validate_knn(const pair<PRoad, double> &pos) {
                     pFrom->second[ordered_k_x[i]->id] + pos.second - pos.second) >
                 min(pTo->second[ordered_k_x[i + 1]->id] + pos.second,
                     pFrom->second[ordered_k_x[i + 1]->id] + pos.second - pos.second)) {
-                if (i >= x) return false;
                 swap(ordered_k_x[i], ordered_k_x[i + 1]);
                 should_recalculate = true;
             }
