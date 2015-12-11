@@ -17,17 +17,17 @@ RoadNetwork::_init RoadNetwork::__init;
 
 RoadNetwork::_init::_init() {
     boost::ignore_unused(__init);
-    reset();
+    reset(0, 0);
 }
 
-void RoadNetwork::reset(double ratio) {
+void RoadNetwork::reset(double ratio, long length) {
     using namespace boost::property_tree;
     ptree pt;
     read_xml("D:\\work\\Code\\RoadINS\\conf.xml", pt);
     const string file_path = pt.get<string>("conf.file_path");
-    if (ratio == -1) ratio = pt.get<double>("conf.site_ratio");
+    if (ratio == 0) ratio = pt.get<double>("conf.site_ratio");
 
-    vector<PNode> nodes = DataReader::read_data(file_path);
+    vector<PNode> nodes = DataReader::read_data(file_path, length);
     cout << "nodes num: " << nodes.size() << endl;
     cout << "roads num: " << accumulate(nodes.begin(), nodes.end(), 0, [](long sum, const PNode &node) {
         return sum + node->roads.size();
