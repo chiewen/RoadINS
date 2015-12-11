@@ -14,7 +14,7 @@
 
 typedef typename vector<shared_ptr<MknnProcessor>>::iterator MPIter;
 
-void print_result(string name, MPIter start, MPIter end) {
+void print_result1(string name, MPIter start, MPIter end) {
     vector<long> v_page, v_server, v_client, v_communication;
     for (auto &p = start; p != end; p++) {
         v_page.push_back((*p)->num_page());
@@ -35,7 +35,7 @@ void print_result(string name, MPIter start, MPIter end) {
     << accumulate(v_communication.begin() + 4, v_communication.begin() + 8, 0) / 4 << "\t";
 }
 
-void execute(const vector<PNode> &nodes, int length, int k, int x, int step) {
+void execute1(const vector<PNode> &nodes, int length, int k, int x, int step) {
     vector<Trajectory> trajectories;
     trajectories.reserve(10);
 //    cout << "\n============= experiment start at " << TimePrinter::now << " =============" << endl;
@@ -62,14 +62,14 @@ void execute(const vector<PNode> &nodes, int length, int k, int x, int step) {
     for (int i = 0; i < 10; ++i)
         ins[i]->move(trajectories[i]);
 
-    print_result("VR", vs.begin(), vs.begin() + 5);
-    print_result("VD", vs.begin() + 5, vs.end());
-    print_result("IR", ins.begin(), ins.begin() + 5);
-    print_result("ID", ins.begin() + 5, ins.end());
+    print_result1("VR", vs.begin(), vs.begin() + 5);
+    print_result1("VD", vs.begin() + 5, vs.end());
+    print_result1("IR", ins.begin(), ins.begin() + 5);
+    print_result1("ID", ins.begin() + 5, ins.end());
     cout << endl;
 }
 
-void execute(const vector<PNode> &nodes, vector<Trajectory> &trajectories, int k, int x, int step) {
+void execute1(const vector<PNode> &nodes, vector<Trajectory> &trajectories, int k, int x, int step) {
     for (auto &t: trajectories)
         t.setStep(step);
 
@@ -91,10 +91,10 @@ void execute(const vector<PNode> &nodes, vector<Trajectory> &trajectories, int k
         vt.clear();
     }
 
-    print_result("VR", mps.begin(), mps.begin() + 12);
-    print_result("VD", mps.begin() + 12, mps.begin() + 24);
-    print_result("IR", mps.begin() + 24, mps.begin() + 36);
-    print_result("ID", mps.begin() + 36, mps.end());
+    print_result1("VR", mps.begin(), mps.begin() + 12);
+    print_result1("VD", mps.begin() + 12, mps.begin() + 24);
+    print_result1("IR", mps.begin() + 24, mps.begin() + 36);
+    print_result1("ID", mps.begin() + 36, mps.end());
     cout << endl;
 }
 
@@ -148,12 +148,12 @@ TEST(Experiment, Multi) {
 
     cout << endl << "step = 50 to 2000 step 50" << endl;
     for (int i = 50; i < 1000; i += 25)
-        execute(nodes, trajectories, k, x, i);
+        execute1(nodes, trajectories, k, x, i);
 
     cout << endl << "ratio = 0.25 to 5 step 0.25" << endl;
     for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
         RoadNetwork::reset_ratio(ratio);
-        execute(nodes, trajectories, k, x, step);
+        execute1(nodes, trajectories, k, x, step);
     }
 
 }

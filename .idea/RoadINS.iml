@@ -2,48 +2,45 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/Dijkstra.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/Dijkstra.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/INS.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/INS.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/MknnProcessor.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/VStar.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/VStar.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/io/DataReader.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/io/DataReader.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Node.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Node.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Road.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Road.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/util/ptr_node_comp.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/util/TimePrinter.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/test/experiment.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Node.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Road.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Node.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/RoadNetwork.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Road.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/Trajectory.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/network/TrajectoryConstructor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/VStar.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/Dijkstra.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/INS.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/Dijkstra.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/VStar.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/INS.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/algorithm/MknnProcessor.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/io/DataReader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/io/DataReader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/experiment_multi.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/net_test.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/test_fixture.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/test/test_fixture.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/test/top_k_test.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/trajectory_test.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/experiment.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/top_k_test.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/test_fixture.h" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include-fixed" />
-          <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/objc" />
-          <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/ssp" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
           <root url="file://$MODULE_DIR$/../../lib/boost_1_59_0" />
           <root url="file://$MODULE_DIR$/../../lib/googletest-master/googletest/include" />
@@ -51,8 +48,6 @@
         <SOURCES>
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include-fixed" />
-          <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/objc" />
-          <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.2.0/include/ssp" />
           <root url="file://C:/Program Files/mingw-w64/x86_64-5.2.0-posix-sjlj-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
           <root url="file://$MODULE_DIR$/../../lib/boost_1_59_0" />
           <root url="file://$MODULE_DIR$/../../lib/googletest-master/googletest/include" />
