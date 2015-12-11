@@ -121,19 +121,20 @@ TEST(Experiment, First) {
     copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
 
     cout << endl << "step = 50 to 1000 step 25" << endl;
-    for (int i = 50; i < 1000; i += 25)
+    for (int i = 10; i < 100; i += 5)
         execute(nodes, trajectories, k, x, i);
 
-    cout << endl << "ratio = 0.05 to 0.11 step 0.005" << endl;
-    for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
-        RoadNetwork::reset_ratio(ratio);
-        execute(nodes, trajectories, k, x, step);
-    }
-
-    cout << endl << "x = 1 to 10" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, k, i, step);
-
-    cout << endl << "k = 1 to 20" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, i, x, step);}
+//    cout << endl << "ratio = 0.05 to 0.11 step 0.005" << endl;
+//    for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
+//        RoadNetwork::reset_ratio(ratio);
+//        execute(nodes, trajectories, k, x, step);
+//    }
+//
+//    cout << endl << "x = 1 to 10" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, k, i, step);
+//
+//    cout << endl << "k = 1 to 20" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, i, x, step);
+}
