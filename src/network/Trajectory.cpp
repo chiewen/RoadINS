@@ -7,7 +7,8 @@
 
 Trajectory::Trajectory(const vector<PRoad> &roads, double step) : roads(roads), step(step) {
     current_road = this->roads.begin();
-    dist_to = (*current_road)->distance;
+    if (current_road != roads.end())
+        dist_to = (*current_road)->distance;
 }
 
 bool Trajectory::has_next() {

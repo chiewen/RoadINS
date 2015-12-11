@@ -23,10 +23,10 @@ vector<PNode> DataReader::read_data(const string &name, long length) {
 void DataReader::read_nodes(const string &name, vector<PNode> &all_nodes, long length) {
     boost::timer::cpu_timer timer;
 
-    cout << "start reading node file from " << name << ".co   " << TimePrinter::now << endl;
+//    cout << endl << "start reading node file from " << name << ".co   " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".co");
 
-    cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
+//    cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
     auto thread_num = thread::hardware_concurrency();
     long node_length = length == 0 ? (long)vec_lines.size() : length;
     auto block_size = node_length / thread_num;
@@ -51,7 +51,7 @@ void DataReader::read_nodes(const string &name, vector<PNode> &all_nodes, long l
     }
     all_nodes.insert(all_nodes.end(), nodes.begin(), nodes.end());
 
-    cout << "nodes finished." << TimePrinter::now << "\t" << timer.format() << endl;
+//    cout << "nodes finished." << TimePrinter::now << "\t" << timer.format() << endl;
 }
 
 vector<string> DataReader::read_file(const string &name) {
@@ -67,10 +67,10 @@ vector<string> DataReader::read_file(const string &name) {
 void DataReader::read_roads(const string &name, vector<PNode> &all_nodes) {
     boost::timer::cpu_timer timer;
 
-    cout << "start reading road file from " << name << ".gr  " << TimePrinter::now << endl;
+//    cout << endl << "start reading road file from " << name << ".gr  " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".gr");
 
-    cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
+//    cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
 
     auto thread_num = thread::hardware_concurrency();
     auto block_size = vec_lines.size() / thread_num;
@@ -110,5 +110,5 @@ void DataReader::read_roads(const string &name, vector<PNode> &all_nodes) {
         vec_threads.emplace_back(insert_road, block_size * i, block_size * (i + 1));
     insert_road(block_size * (thread_num - 1), vec_lines.size());
     for_each(vec_threads.begin(), vec_threads.end(), mem_fn(&thread::join));
-    cout << "finish reading roads " << TimePrinter::now << "\t" << timer.format() << endl;
+//    cout << "finish reading roads " << TimePrinter::now << "\t" << timer.format() << endl;
 }

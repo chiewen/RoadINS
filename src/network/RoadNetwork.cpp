@@ -17,7 +17,7 @@ RoadNetwork::_init RoadNetwork::__init;
 
 RoadNetwork::_init::_init() {
     boost::ignore_unused(__init);
-    reset(0, 0);
+    reset();
 }
 
 void RoadNetwork::reset(double ratio, long length) {
@@ -65,14 +65,15 @@ void RoadNetwork::set_nearest(const vector<PNode> &nodes) {
     for_each(threads_nearest.begin(), threads_nearest.end(), mem_fn(&thread::join));
 
     auto calc_voronoi = [&](long s, long t) {
-        for (long i = s; i < t; i++) {
-            for (auto &r: nodes[i]->roads)
-                if (r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
+        for (long i = s; i < t; i++)
+            for (auto &r: nodes[i]->roads) {
+                if (r->from.lock()->nearest_site.second >= 0 && r->to.lock()->nearest_site.second >= 0 &&
+                    r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
                     lock_guard<mutex> {r->from.lock()->nearest_site.first.lock()->mutex_voronoi};
                     r->from.lock()->nearest_site.first.lock()->voronoi_neighbors.insert(
                             r->to.lock()->nearest_site.first.lock()->id);
                 }
-        }
+            }
     };
     vector<thread> threads_voronoi;
     for (int i = 0; i < thread_num - 1; i++)

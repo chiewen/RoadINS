@@ -16,6 +16,8 @@ void Dijkstra::find_nearest(const PNode &ptr_node) {
 
     typedef vector<pair<PNode, double>> neighbor_vec;
     set<long> searched;
+
+    bool found = false;
     while (!known_nodes.empty()) {
         typedef known_map::value_type map_value;
         auto min = min_element(known_nodes.begin(), known_nodes.end(),
@@ -23,6 +25,7 @@ void Dijkstra::find_nearest(const PNode &ptr_node) {
         auto p_min = min->second.second;
         if (p_min->isSite) {
             ptr_node->nearest_site = make_pair(p_min, min->second.first);
+            found = true;
             break;
         }
         auto d_min = min->second.first;
@@ -38,6 +41,7 @@ void Dijkstra::find_nearest(const PNode &ptr_node) {
                 m->second.first = d_min + n->distance;
         }
     }
+    if (!found) ptr_node->nearest_site = make_pair(ptr_node, -1);
 }
 
 
@@ -224,7 +228,8 @@ vector<PRoad> Dijkstra::shortest_path_length(const PNode &ptr_from, long length)
     vector<PRoad> result;
     map<long, tuple<double, PNode, PRoad>> known_nodes;
     known_nodes.insert(make_pair(ptr_from->id, make_tuple(0, ptr_from, nullptr)));
-    map<long, PRoad> searched;
+    map<long, pair<PRoad, int>> searched;
+//    int max = 0;
     while (!known_nodes.empty()) {
         typedef remove_reference<decltype(known_nodes)>::type::value_type map_value;
         auto min = min_element(known_nodes.begin(), known_nodes.end(),
@@ -233,15 +238,19 @@ vector<PRoad> Dijkstra::shortest_path_length(const PNode &ptr_from, long length)
                                });
         auto p_min = get<1>(min->second);
         auto d_min = get<0>(min->second);
-        searched.insert(make_pair(p_min->id, get<2>(min->second)));
+
+        int dist = 0;
+        if (get<2>(min->second) != nullptr) {
+            auto pr = searched.find(get<2>(min->second)->from.lock()->id);
+            if (pr != searched.end()) dist = pr->second.second + 1;
+        }
+//        if (dist > max) max = dist;
+        searched.insert(make_pair(p_min->id, make_pair(get<2>(min->second), dist)));
         known_nodes.erase(min);
 
-        long count = 0;
-        for (auto previous = searched[p_min->id]; previous; previous = searched.at(previous->from.lock()->id))
-            ++count;
-        if (count >= length) {
-            for (auto previous = searched[p_min->id]; previous; previous = searched.at(previous->from.lock()->id))
-                result.push_back(previous);
+        if (dist >= length) {
+            for (auto previous = searched[p_min->id]; previous.first; previous = searched.at(previous.first->from.lock()->id))
+                result.push_back(previous.first);
             break;
         }
         else
@@ -257,5 +266,6 @@ vector<PRoad> Dijkstra::shortest_path_length(const PNode &ptr_from, long length)
                 }
             }
     }
+//    if (result.empty()) cerr << "empty at " << max << endl;
     return result;
 }
