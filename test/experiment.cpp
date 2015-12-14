@@ -31,40 +31,6 @@ void print_result(string name, MPIter start, MPIter end) {
     << accumulate(v_communication.begin(), v_communication.begin() + 3, 0) / 3 << "\t";
 }
 
-void execute(const vector<PNode> &nodes, int length, int k, int x, int step) {
-    vector<Trajectory> trajectories;
-    trajectories.reserve(10);
-//    cout << "\n============= experiment start at " << TimePrinter::now << " =============" << endl;
-    for (int i = 0; i < 100000; i += 20000)
-        trajectories.emplace_back(TrajectoryConstructor::construct_random(nodes[i], length, step));
-    cout << "R " << TimePrinter::now << "\t";
-
-    for (int i = 0; i < 100000; i += 20000)
-        trajectories.emplace_back(TrajectoryConstructor::construct_shortest_path(nodes[i], length, step));
-    cout << "D " << TimePrinter::now << "\t";
-
-    vector<shared_ptr<MknnProcessor>> vs;
-    vs.reserve(10);
-    for (int i = 0; i < 10; ++i)
-        vs.emplace_back(make_shared<VStar>(k, x));
-
-    vector<shared_ptr<MknnProcessor>> ins;
-    for (int i = 0; i < 10; ++i)
-        ins.emplace_back(make_shared<INS>(k));
-
-    cout << "moving  " << TimePrinter::now << "\t";
-    for (int i = 0; i < 10; ++i)
-        vs[i]->move(trajectories[i]);
-    for (int i = 0; i < 10; ++i)
-        ins[i]->move(trajectories[i]);
-
-    print_result("VR", vs.begin(), vs.begin() + 5);
-    print_result("VD", vs.begin() + 5, vs.end());
-    print_result("IR", ins.begin(), ins.begin() + 5);
-    print_result("ID", ins.begin() + 5, ins.end());
-    cout << endl;
-}
-
 void execute(const vector<PNode> &nodes, vector<Trajectory> &trajectories, int k, int x, int step) {
     for (auto &t: trajectories)
         t.setStep(step);
@@ -120,23 +86,25 @@ TEST(Experiment, First) {
 
     copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
 
-    cout << endl << "step = 10 to 100 step 5" << endl;
-    for (int i = 10; i < 100; i += 5)
-        execute(nodes, trajectories, k, x, i);
 
-    cout << endl << "ratio = 0.05 to 0.11 step 0.005" << endl;
-    for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
-        RoadNetwork::reset_ratio(ratio);
-        execute(nodes, trajectories, k, x, step);
+    for (int r = 0; r < 8; r++) {
+        cout << endl << "ratio = 0.05 to 0.11 step 0.005" << endl;
+        for (double ratio = 0.05; ratio <= 0.11; ratio += 0.005) {
+            RoadNetwork::reset_ratio(ratio);
+            execute(nodes, trajectories, k, x, step);
+        }
     }
-
-    cout << endl << "x = 1 to 10" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, k, i, step);
-
-    cout << endl << "k = 1 to 20" << endl;
-    for (int i = 1; i < 20; i++)
-        execute(nodes, trajectories, i, x, step);
+//    cout << endl << "step = 10 to 100 step 5" << endl;
+//    for (int i = 10; i < 100; i += 5)
+//        execute(nodes, trajectories, k, x, i);
+//
+//    cout << endl << "x = 1 to 10" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, k, i, step);
+//
+//    cout << endl << "k = 1 to 20" << endl;
+//    for (int i = 1; i < 20; i++)
+//        execute(nodes, trajectories, i, x, step);
 }
 
 TEST(Experiment, Cardinal) {
@@ -145,42 +113,92 @@ TEST(Experiment, Cardinal) {
     int x = 6;
     int step = 40;
 
+    for (int e = 0; e < 5; e++) {
+
+        cout << "\n============= " << e << "th experiment start at " << TimePrinter::now << " =============\n" << endl;
+        vector<Trajectory> trajectories;
+
+        cout << endl << "cardinal 5000 to 260000 step 5000" << endl;
+        for (long i = 5000; i < 260000; i += 5000) {
+            RoadNetwork::reset(0, i);
+            auto &nodes = RoadNetwork::get_mutable_instance();
+
+            trajectories.clear();
+            trajectories.reserve(12);
+            for (int i = 0; i < 1200; i += 400) {
+                auto traj = TrajectoryConstructor::construct_random(nodes[i], length, step);
+                trajectories.emplace_back(traj);
+            }
+
+            vector<thread> vt;
+            mutex m_traj;
+            for (int i = 0; i < 1200; i += 400)
+                vt.emplace_back([i, length, step, &m_traj, &trajectories, &nodes]() {
+                    int j = i;
+                    do {
+                        while (nodes[j]->nearest_site.second < 0) j++;
+                        auto t = TrajectoryConstructor::construct_shortest_path(nodes[j++], length, step);
+                        if (!t.has_next()) continue;
+                        else {
+                            lock_guard<mutex> {m_traj};
+                            trajectories.push_back(t);
+                            break;
+                        }
+                    } while (true);
+                });
+
+            for (auto &t : vt)
+                t.join();
+
+            copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
+            execute(nodes, trajectories, k, x, step);
+        }
+    }
+}
+
+
+TEST(Experiment, Length) {
+    auto &nodes = RoadNetwork::get_mutable_instance();
+
+    int k = 10;
+    int x = 6;
+    int step = 40;
+
     cout << "\n============= experiment start at " << TimePrinter::now << " =============\n" << endl;
     vector<Trajectory> trajectories;
 
-    cout << endl << "cardinal 5000 to 260000 step 5000" << endl;
-    for (long i = 5000; i < 260000; i += 5000) {
-        RoadNetwork::reset(0, i);
-        auto &nodes = RoadNetwork::get_mutable_instance();
+    for (int l = 0; l < 8; l++) {
+        cout << endl << "length 50 to 1000 step 50" << endl;
+        for (long length = 50; length < 850; length += 50) {
+            trajectories.clear();
+            trajectories.reserve(12);
+            for (int j = 0; j < 12000; j += 4000) {
+                auto traj = TrajectoryConstructor::construct_random(nodes[j], length, step);
+                trajectories.emplace_back(traj);
+            }
 
-        trajectories.clear();
-        trajectories.reserve(12);
-        for (int i = 0; i < 1200; i += 400) {
-            auto traj = TrajectoryConstructor::construct_random(nodes[i], length, step);
-            trajectories.emplace_back(traj);
+            vector<thread> vt;
+            mutex m_traj;
+            for (int k = 0; k < 12000; k += 4000)
+                vt.emplace_back([k, length, step, &m_traj, &trajectories, &nodes]() {
+                    int j = k;
+                    do {
+                        while (nodes[j]->nearest_site.second < 0) j++;
+                        auto t = TrajectoryConstructor::construct_shortest_path(nodes[j++], length, step);
+                        if (!t.has_next()) continue;
+                        else {
+                            lock_guard<mutex> {m_traj};
+                            trajectories.push_back(t);
+                            break;
+                        }
+                    } while (true);
+                });
+
+            for (auto &t : vt)
+                t.join();
+
+            copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
+            execute(nodes, trajectories, k, x, step);
         }
-
-        vector<thread> vt;
-        mutex m_traj;
-        for (int i = 0; i < 1200; i += 400)
-            vt.emplace_back([i, length, step, &m_traj, &trajectories, &nodes]() {
-                int j = i;
-                do {
-                    while (nodes[j]->nearest_site.second < 0) j++;
-                    auto t = TrajectoryConstructor::construct_shortest_path(nodes[j++], length, step);
-                    if (!t.has_next()) continue;
-                    else {
-                        lock_guard<mutex> {m_traj};
-                        trajectories.push_back(t);
-                        break;
-                    }
-                } while (true);
-            });
-
-        for (auto &t : vt)
-            t.join();
-
-        copy(trajectories.begin(), trajectories.begin() + 6, back_inserter(trajectories));
-        execute(nodes, trajectories, k, x, step);
     }
 }
