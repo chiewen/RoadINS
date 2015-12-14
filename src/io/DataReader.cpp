@@ -13,22 +13,23 @@
 
 using namespace std;
 
-vector<PNode> DataReader::read_data(const string &name) {
+vector<PNode> DataReader::read_data(const string &name, long length) {
     vector<PNode> all_nodes;
-    read_nodes(name, all_nodes);
+    read_nodes(name, all_nodes, length);
     read_roads(name, all_nodes);
     return all_nodes;
 }
 
-void DataReader::read_nodes(const string &name, vector<PNode> &all_nodes) {
+void DataReader::read_nodes(const string &name, vector<PNode> &all_nodes, long length) {
     boost::timer::cpu_timer timer;
 
-    cout << "start reading node file from " << name << ".co   " << TimePrinter::now << endl;
+    cout << endl << "start reading node file from " << name << ".co   " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".co");
 
     cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;
     auto thread_num = thread::hardware_concurrency();
-    auto block_size = vec_lines.size() / thread_num;
+    long node_length = length == 0 ? (long)vec_lines.size() : length;
+    auto block_size = node_length / thread_num;
     regex reg_node("v (\\d*) (-?\\d*) (\\d*)");
     auto construct_nodes = [&](long s, long t) -> vector<PNode> {
         vector<PNode> nodes;
@@ -43,7 +44,7 @@ void DataReader::read_nodes(const string &name, vector<PNode> &all_nodes) {
     vector<future<vector<PNode>>> vec_future;
     for (long i = 0; i < thread_num - 1; i++)
         vec_future.push_back(async(launch::async, construct_nodes, block_size * i, block_size * (i + 1)));
-    auto nodes = construct_nodes(block_size * (thread_num - 1), vec_lines.size());
+    auto nodes = construct_nodes(block_size * (thread_num - 1), node_length);
     for (auto &f: vec_future) {
         auto v = f.get();
         all_nodes.insert(all_nodes.end(), v.begin(), v.end());
@@ -66,7 +67,7 @@ vector<string> DataReader::read_file(const string &name) {
 void DataReader::read_roads(const string &name, vector<PNode> &all_nodes) {
     boost::timer::cpu_timer timer;
 
-    cout << "start reading road file from " << name << ".gr  " << TimePrinter::now << endl;
+    cout << endl << "start reading road file from " << name << ".gr  " << TimePrinter::now << endl;
     vector<string> vec_lines = read_file(name + ".gr");
 
     cout << "file reading finished at " << TimePrinter::now << " now parsing..." << endl;

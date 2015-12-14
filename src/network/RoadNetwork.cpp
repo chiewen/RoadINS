@@ -20,14 +20,14 @@ RoadNetwork::_init::_init() {
     reset();
 }
 
-void RoadNetwork::reset(double ratio) {
+void RoadNetwork::reset(double ratio, long length) {
     using namespace boost::property_tree;
     ptree pt;
     read_xml("D:\\work\\Code\\RoadINS\\conf.xml", pt);
     const string file_path = pt.get<string>("conf.file_path");
-    if (ratio == -1) ratio = pt.get<double>("conf.site_ratio");
+    if (ratio == 0) ratio = pt.get<double>("conf.site_ratio");
 
-    vector<PNode> nodes = DataReader::read_data(file_path);
+    vector<PNode> nodes = DataReader::read_data(file_path, length);
     cout << "nodes num: " << nodes.size() << endl;
     cout << "roads num: " << accumulate(nodes.begin(), nodes.end(), 0, [](long sum, const PNode &node) {
         return sum + node->roads.size();
@@ -65,14 +65,15 @@ void RoadNetwork::set_nearest(const vector<PNode> &nodes) {
     for_each(threads_nearest.begin(), threads_nearest.end(), mem_fn(&thread::join));
 
     auto calc_voronoi = [&](long s, long t) {
-        for (long i = s; i < t; i++) {
-            for (auto &r: nodes[i]->roads)
-                if (r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
+        for (long i = s; i < t; i++)
+            for (auto &r: nodes[i]->roads) {
+                if (r->from.lock()->nearest_site.second >= 0 && r->to.lock()->nearest_site.second >= 0 &&
+                    r->from.lock()->nearest_site.first.lock()->id != r->to.lock()->nearest_site.first.lock()->id) {
                     lock_guard<mutex> {r->from.lock()->nearest_site.first.lock()->mutex_voronoi};
                     r->from.lock()->nearest_site.first.lock()->voronoi_neighbors.insert(
                             r->to.lock()->nearest_site.first.lock()->id);
                 }
-        }
+            }
     };
     vector<thread> threads_voronoi;
     for (int i = 0; i < thread_num - 1; i++)
